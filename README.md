@@ -161,6 +161,8 @@ To deploy the token contract to the Ropsten public test network.
 truffle deploy --reset --network ropsten
 ```
 
+The ERC20 extension currently works with the [0xd80193ff5773256e4dd864141210aef04789b48e](https://ropsten.etherscan.io/address/0xd80193ff5773256e4dd864141210aef04789b48e) contract deployed to the Ropsten testnet.
+
 ## Smart Contracts
 
 The contracts used by the Scratch extensions are based off [Open Zeppelin](https://docs.openzeppelin.org/) contract.
@@ -216,4 +218,21 @@ This project is deploying to Heroku hence the `registry.heroku.com/eth-scratch3-
 
 # Continuous Integration
 
-[CicleCi](https://circleci.com/) is used for CI. The config file is [.circleci/config.yml](.circleci/config.yml).
+[CicleCi](https://circleci.com/) is used for CI. The config file is [.circleci/config.yml](.circleci/config.yml). The CircleCi jobs can be viewed at https://circleci.com/gh/naddison36/eth-scratch3/tree/master.
+
+Currently, builds are automatically pushed to Heroku https://eth-scratch3.herokuapp.com/. This will probably change to AWS in the future.
+
+# TODO
+
+* Hat blocks for emitted events
+* [ERC721](http://erc721.org/) non-fungible tokens
+* Generating an extension from a contract’s ABI
+* Integrating [Assist.js](https://github.com/blocknative/assist) for easier onboarding
+* Deploy the Scratch server to another Cloud platform. eg AWS
+* Extension that uses Web3.js 1.x
+* Extension that uses [Ethers.js](https://docs.ethers.io/ethers.js/html/)
+* Add other contracts. eg
+    * ENS
+    * IDEX
+    * UniSwap
+    * MakerDAO

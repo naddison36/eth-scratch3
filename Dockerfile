@@ -18,9 +18,7 @@ RUN tar xfz gui.tar.gz
 RUN mv /scratch/scratch-vm-develop /scratch/scratch-vm
 RUN mv /scratch/scratch-gui-develop /scratch/scratch-gui
 
-# COPY heroku/.env.* /scratch/scratch-gui/
 COPY scratch/gui/index.jsx /scratch/scratch-gui/src/lib/libraries/extensions/index.jsx
-# COPY scratch/gui/webpack.config.js /scratch/scratch-gui/webpack.config.js
 COPY scratch/extensions /scratch/scratch-vm/src/extensions/custom
 COPY build/contracts /scratch/scratch-vm/src/extensions/custom/contracts
 COPY scratch/vm/extension-manager.js /scratch/scratch-vm/src/extension-support/extension-manager.js

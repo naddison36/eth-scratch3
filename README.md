@@ -19,6 +19,26 @@ To load an extension, click the `Add Extension` button on the bottom left of the
 
 ![Add Extension](./docs/addExtensionButton.png "Add Extension")
 
+## What is Scratch?
+[Scratch](https://scratch.mit.edu/) is a project of the Lifelong [Kindergarten Group](https://www.media.mit.edu/groups/lifelong-kindergarten/overview/) at the [MIT Media Lab](https://www.media.mit.edu/). It is provided free of charge.
+
+Scratch is designed especially for ages 8 to 16, but is used by people of all ages. Millions of people are creating Scratch projects in a wide variety of settings, including homes, schools, museums, libraries, and community centers.
+
+## Scratch 3.0
+[Scratch 3.0](https://scratch.mit.edu/info/faq#scratch3) is the latest generation of Scratch, launched on January 2, 2019. It is designed to expand how, what, and where you can create with Scratch. It includes dozens of new sprites, a totally new sound editor, and many new programming blocks. And with Scratch 3.0, you’re able to create and play projects on your tablet, in addition to your laptop or desktop computer.
+
+## Scratch 3.0 Extensions
+In the Scratch editor, you can add collections of extra blocks called [extensions](https://scratch.mit.edu/info/faq#scratch-extensions).
+
+The Scratch Team will be publishing specifications and guidelines for extensions in the future. Once available, you will be able to submit extensions to the Scratch Team for consideration in the official Scratch 3.0 extensions library. We’ll also provide guidelines for developing and distributing "experimental" extensions, which can be used to create projects on individual computers, but not shared in the Scratch online community.
+
+## Hacking Scratch 3.0 Extensions
+Although Scratch extension specifications have not been released, a few people in the community have worked out how to hack together a Scratch 3.0 extension. Most of the work in this repository is based off the blog post [How to Develop Your Own Block for Scratch 3.0](https://medium.com/@hiroyuki.osaki/how-to-develop-your-own-block-for-scratch-3-0-1b5892026421).
+
+An example Scratch game [Scratch Wars](https://scratch.mit.edu/projects/95284179/).
+
+For more Scratch information, see the [Scratch FAQ](https://scratch.mit.edu/info/faq).
+
 ## Scratch 3.0 Extension Development
 
 ### Prerequisite 

@@ -53,7 +53,6 @@ class TokenDetailedMintableBurnable {
         // })
     }
 
-
     transfer(toAddress, value)
     {
         return new Promise((resolve, reject) => {
@@ -252,7 +251,7 @@ class TokenDetailedMintableBurnable {
 
             log.debug(`About to ${description}`)
 
-            this.tokenContract.balanceOf(ownerAddress, spenderAddress, (err, allowance) => {
+            this.tokenContract.allowance(ownerAddress, spenderAddress, (err, allowance) => {
 
                 if(err) {
                     log.error(`Failed to ${description}. Error: ${err}`)

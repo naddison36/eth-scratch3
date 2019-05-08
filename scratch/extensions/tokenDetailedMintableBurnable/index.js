@@ -278,7 +278,19 @@ class TokenDetailedMintableBurnableBlocks {
     }
 
 
-    allowance(args) {}
+    allowance(args)
+    {
+        if (!args.OWNER || !args.OWNER.match(regEx.ethereumAddress)) {
+            log.error(`Invalid owner address "${args.OWNER}" for the allowance command. Must be a 40 char hexadecimal with a 0x prefix`)
+            return
+        }
+        if (!args.SENDER || !args.SENDER.match(regEx.ethereumAddress)) {
+            log.error(`Invalid spender address "${args.SENDER}" for the allowance command. Must be a 40 char hexadecimal with a 0x prefix`)
+            return
+        }
+
+        return this.token.allowance(args.OWNER, args.SENDER)
+    }
 
 
     balanceOf(args)

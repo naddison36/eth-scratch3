@@ -7,8 +7,6 @@ const ethereumAddress = require('../regEx').ethereumAddress
 class TokenDetailedMintableBurnable {
 
     constructor(options = {}) {
-        this.network = options.network || 3   // default to the Ropsten network
-        this.contractAddress = options.contractAddress || TokenContract.networks[this.network].address
 
         if (typeof web3 === 'undefined') {
             log.warn('MetaMask is not installed so will load web3 locally')
@@ -28,7 +26,14 @@ class TokenDetailedMintableBurnable {
             this.web3Client = new Web3(web3.currentProvider)
         }
 
-        log.debug(`Instantiated contract with address ${this.contractAddress} and ABI: ${JSON.stringify(TokenContract.abi)}`)
+        this.setContract(options)
+    }
+
+    setContract(options)
+    {
+        this.network = options.network || 3 // default to the Ropsten network
+        this.contractAddress = options.contractAddress || TokenContract.networks[this.network].address
+
         this.tokenContract = this.web3Client.eth.contract(TokenContract.abi).at(this.contractAddress)
 
         log.debug(`Token contract address ${this.contractAddress} for network ${this.network}`)

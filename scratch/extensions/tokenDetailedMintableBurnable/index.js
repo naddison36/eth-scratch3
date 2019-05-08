@@ -60,6 +60,25 @@ class TokenDetailedMintableBurnableBlocks {
             // in the order intended for display.
             blocks: [
                 {
+                    opcode: 'setContract',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'tokenDetailedMintableBurnable.setContract',
+                        default: 'Set contract [ADDRESS] on network with id [NETWORK_ID]',
+                        description: 'command text',
+                    }),
+                    arguments: {
+                        ADDRESS: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'contractAddress',
+                        },
+                        NETWORK_ID: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0,
+                        },
+                    },
+                },
+                {
                     // Required: the machine-readable name of this operation.
                     // This will appear in project JSON.
                     opcode: 'transfer',
@@ -291,6 +310,19 @@ class TokenDetailedMintableBurnableBlocks {
                 },
             ],
         }
+    }
+
+    setContract(args) {
+        const methodName = 'setContractAddress'
+        if (!args.ADDRESS || !args.ADDRESS.match(regEx.ethereumAddress)) {
+            log.error(`Invalid address "${args.ADDRESS}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+            return
+        }
+
+        this.token.setContract({
+            contractAddress: args.ADDRESS,
+            network: args.NETWORK_ID,
+        })
     }
 
     transfer(args)

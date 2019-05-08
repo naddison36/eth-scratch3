@@ -35,8 +35,6 @@ WORKDIR /scratch/scratch-vm
 RUN npm set progress=false && \
    npm config set depth 0 && \
    npm install && \
-   npm install loom-js && \
-   npm install web3@1.0.0-beta.34 && \
    npm cache clean --force
 
 RUN npm link

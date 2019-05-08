@@ -201,20 +201,25 @@ This [Dockerfile](./Dockerfile) will add the [ERC20](./scratch/extensions/erc20/
 
 `npm run buildWebImage` will build the Docker image which runs
 ```
-docker build -t registry.heroku.com/eth-scratch3-prod/web:latest --target web .
+docker build -t registry.heroku.com/eth-scratch3/web:latest --target web .
 ```
 
 `npm run bashWebImage` will shell into the build image which runs
 ```
-docker run -it registry.heroku.com/eth-scratch3-prod/web:latest sh
+docker run -it registry.heroku.com/eth-scratch3/web:latest sh
 ```
 
 `npm run runWebImage` will run the Scratch 3.0 react app locally
 ```
-docker run -p 8601:8601 -e PORT=8601 registry.heroku.com/eth-scratch3-prod/web:latest
+docker run -p 8601:8601 -e PORT=8601 registry.heroku.com/eth-scratch3/web:latest
 ```
 
-This project is deploying to Heroku hence the `registry.heroku.com/eth-scratch3-prod` image names. These will need to be changed if deploying to other cloud-based container registries.
+`npm run pushWebImage` will push the image up to the Heroku container registry
+```
+docker push registry.heroku.com/eth-scratch3/web:latest
+```
+
+This project is deploying to Heroku hence the `registry.heroku.com/eth-scratch3` image names. These will need to be changed if deploying to other cloud-based container registries.
 
 # Continuous Integration
 

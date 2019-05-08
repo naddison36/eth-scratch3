@@ -197,24 +197,24 @@ npx --forceExit --detectOpenHandles --runInBand
 
 # Docker
 
-This [Dockerfile](./Dockerfile) will add the [ERC20](./scratch/extensions/erc20/index.js) as a built in extension, build the Scratch 3.0 react app and copy it into a nginx image. This can then be deployed to a cloud provider. This project is currently using Heroku, but others like AWS, Azure and GCP will also work.
+This [Dockerfile](./Dockerfile) will add the Scratch extensions like [Detailed, mintable, burnable token](./scratch/extensions/tokenDetailedMintableBurnable/index.js) to the Scratch 3.0 react app and copy it into a nginx image. This image can then be deployed to a cloud provider. This project is currently using Heroku, but others like AWS, Azure and GCP will also work.
 
 `npm run buildWebImage` will build the Docker image which runs
 ```
 docker build -t registry.heroku.com/eth-scratch3/web:latest --target web .
 ```
 
-`npm run bashWebImage` will shell into the build image which runs
+`npm run bashWebImage` will shell into the built web image
 ```
 docker run -it registry.heroku.com/eth-scratch3/web:latest sh
 ```
 
-`npm run runWebImage` will run the Scratch 3.0 react app locally
+`npm run runWebImage` will run the Scratch 3.0 react app with extensions locally
 ```
 docker run -p 8601:8601 -e PORT=8601 registry.heroku.com/eth-scratch3/web:latest
 ```
 
-`npm run pushWebImage` will push the image up to the Heroku container registry
+`npm run pushWebImage` will push the web image up to the Heroku container registry
 ```
 docker push registry.heroku.com/eth-scratch3/web:latest
 ```

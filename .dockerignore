@@ -1,0 +1,10 @@
+**/node_modules
+**/*.log
+**/*.md
+**/Dockerfile*
+.*
+docker-compose*
+LICENSE
+logs
+bin
+chaindata

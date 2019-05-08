@@ -1,0 +1,35 @@
+{
+  "name": "eth-scratch3",
+  "version": "0.0.1",
+  "description": "Scratch 3 extensions for common Ethereum contracts",
+  "main": "index.js",
+  "scripts": {
+    "buildBaseImage": "docker build -t registry.heroku.com/eth-scratch3/base:latest --target base .",
+    "bashBaseImage": "docker run -it registry.heroku.com/eth-scratch3/base:latest bash",
+    "buildWebImage": "docker build -t registry.heroku.com/eth-scratch3/web:latest --target web .",
+    "bashWebImage": "docker run -it registry.heroku.com/eth-scratch3/web:latest sh",
+    "runWebImage": "docker run -p 8601:8601 -e PORT=8601 registry.heroku.com/eth-scratch3/web:latest",
+    "pushWebImage": "docker push registry.heroku.com/eth-scratch3/web:latest",
+    "deployLocal": "truffle deploy --reset",
+    "test": "./node_modules/.bin/jest --forceExit --detectOpenHandles --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naddison36/eth-scratch3.git"
+  },
+  "authors": [
+    "Nick Addison"
+  ],
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "minilog": "^3.1.0"
+  },
+  "devDependencies": {
+    "jest": "^24.7.1",
+    "openzeppelin-solidity": "^2.2.0",
+    "solc": "^0.5.8",
+    "truffle": "^5.0.13",
+    "truffle-hdwallet-provider": "^1.0.6",
+    "web3": "^0.20.3"
+  }
+}

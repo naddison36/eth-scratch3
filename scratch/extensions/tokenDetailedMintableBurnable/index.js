@@ -70,9 +70,32 @@ class TokenDetailedMintableBurnableBlocks {
                     arguments: {
                         ADDRESS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'contractAddress',
+                            defaultValue: 'tokenAddress',
                         },
                         NETWORK_ID: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: this.token.network,
+                        },
+                    },
+                },
+                {
+                    opcode: 'deploy',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'tokenDetailedMintableBurnable.deploy',
+                        default: 'Deploy contract with symbol [SYMBOL], name [NAME] and decimals [DECIMALS]',
+                        description: 'command text',
+                    }),
+                    arguments: {
+                        SYMBOL: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'symbol',
+                        },
+                        NAME: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'name',
+                        },
+                        DECIMALS: {
                             type: ArgumentType.NUMBER,
                             defaultValue: 0,
                         },
@@ -325,6 +348,21 @@ class TokenDetailedMintableBurnableBlocks {
         })
     }
 
+    deploy(args) {
+        if (!args.SYMBOL || typeof args.SYMBOL !== 'string') {
+            log.error(`Invalid symbol "${args.SYMBOL}" for contract deploy command. Must be a string`)
+            return
+        }
+        if (!args.NAME || typeof args.NAME !== 'string') {
+            log.error(`Invalid name "${args.NAME}" for contract deploy command. Must be a string`)
+            return
+        }
+
+        return this.token.deploy(
+            [args.SYMBOL, args.NAME, args.DECIMALS],
+            `deploy token contract with symbol ${args.SYMBOL}, name ${args.NAME} and decimals ${args.DECIMALS}`)
+    }
+
     transfer(args)
     {
         const methodName = 'transfer'
@@ -334,7 +372,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+        if (!Number.isInteger(args.VALUE)) {
             log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
@@ -357,7 +395,7 @@ class TokenDetailedMintableBurnableBlocks {
             log.error(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
-        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+        if (!Number.isInteger(args.VALUE)) {
             log.error(`Invalid value for the approve from command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
@@ -376,7 +414,7 @@ class TokenDetailedMintableBurnableBlocks {
             log.error(`Invalid spender address "${args.SPENDER}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
-        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+        if (!Number.isInteger(args.VALUE)) {
             log.error(`Invalid value for the ${methodName} from command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
@@ -396,7 +434,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+        if (!Number.isInteger(args.VALUE)) {
             log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
@@ -411,7 +449,7 @@ class TokenDetailedMintableBurnableBlocks {
     {
         const methodName = 'burn'
 
-        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+        if (!Number.isInteger(args.VALUE)) {
             log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
@@ -431,7 +469,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+        if (!Number.isInteger(args.VALUE)) {
             log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }

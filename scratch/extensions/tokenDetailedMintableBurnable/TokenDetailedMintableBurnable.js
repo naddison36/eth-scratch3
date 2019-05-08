@@ -39,26 +39,40 @@ class TokenDetailedMintableBurnable {
         log.debug(`Token contract address ${this.contractAddress} for network ${this.network}`)
     }
 
-    deploy() {
+    deploy(params, description)
+    {
+        return new Promise((resolve, reject) => {
 
-        // return new Promise((resolve, reject) => {
-        //     log.debug(`About to deploy challenge contract signed by challenger ${this.challengerAddress}`)
+            const deployDescription = `${description} to network with id ${web3.version.network} with params ${JSON.stringify(params)}`
 
-        //     this.contract.deploy({
-        //         data: ChallengeContract.bytecode,
-        //     })
-        //     .send({from: this.challengerAddress})
-        //     .catch(err => {
-        //         reject(new Error(`Failed to deploy Challenge contract. ${err.message}`))
-        //     })
-        //     .then(contract => {
-        //         this.contract = contract
+            log.debug(`About to ${deployDescription}`)
 
-        //         log.info(`Deployed Challenge contract address ${this.contract.options.address}`)
+            this.tokenContract = web3.eth.contract(TokenContract.abi)
 
-        //         resolve(this.contract.options.address)
-        //     })
-        // })
+            this.tokenContract.new(
+                ...params, 
+                {data: TokenContract.bytecode},
+                (err, contract) =>
+            {
+                if(err) {
+                    const error = new VError(err, `Failed to ${deployDescription}.`)
+                    log.error(error.message)
+                    return reject(error)
+                }
+
+                if(!contract.address) {
+                    log.info(`Got transaction hash ${contract.transactionHash} for ${deployDescription}`)
+                }
+                else {
+                    this.setContract({
+                        contractAddress: contract.address,
+                        network: web3.version.network
+                    })
+
+                    resolve(contract.address)
+                }
+            })
+        })
     }
 
     send(methodName, args, description)

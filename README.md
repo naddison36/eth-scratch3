@@ -17,6 +17,8 @@ After the server starts, Scratch should be available at [http://localhost:8601](
 
 To load an extension, click the `Add Extension` button on the bottom left of the Scratch UI.
 
+![Add Extension](./docs/addExtensionButton.png "Add Extension")
+
 ## Scratch 3.0 Extension Development
 
 ### Prerequisite 
@@ -137,7 +139,7 @@ To run a particular test, use the `-t` option. eg
 
 If npx is installed globally, the tests can also be run by
 ```bash
-npx jest --forceExit --detectOpenHandles --runInBand
+npx --forceExit --detectOpenHandles --runInBand
 ```
 
 # Docker

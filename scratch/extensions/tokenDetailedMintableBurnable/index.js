@@ -116,7 +116,7 @@ class TokenDetailedMintableBurnableBlocks {
                         TO: {
                             // Required: type of the argument / shape of the block input
                             type: ArgumentType.STRING,
-                            defaultValue: 'to address',
+                            defaultValue: 'toAddress',
                         },
                         VALUE: {
                             type: ArgumentType.NUMBER,
@@ -129,17 +129,17 @@ class TokenDetailedMintableBurnableBlocks {
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
                         id: 'tokenDetailedMintableBurnable.transferFrom',
-                        default: 'Transfer [FROM], [TO], [VALUE]',
+                        default: 'Transfer from [FROM], [TO], [VALUE]',
                         description: 'command text',
                     }),
                     arguments: {
                         FROM: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'from address',
+                            defaultValue: 'fromAddress',
                         },
                         TO: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'to address',
+                            defaultValue: 'toAddress',
                         },
                         VALUE: {
                             type: ArgumentType.NUMBER,
@@ -158,7 +158,7 @@ class TokenDetailedMintableBurnableBlocks {
                     arguments: {
                         SPENDER: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'spender address',
+                            defaultValue: 'spenderAddress',
                         },
                         VALUE: {
                             type: ArgumentType.NUMBER,
@@ -177,7 +177,7 @@ class TokenDetailedMintableBurnableBlocks {
                     arguments: {
                         ADDRESS: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'address',
+                            defaultValue: 'ownerAddress',
                         },
                     },
                 },
@@ -242,41 +242,65 @@ class TokenDetailedMintableBurnableBlocks {
 
     transfer(args)
     {
+        const methodName = 'transfer'
+
         if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid TO address "${args.TO}" for the transfer command. Must be a 40 char hexadecimal with a 0x prefix`)
+            log.error(`Invalid TO address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
 
         if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
-            log.error(`Invalid value for the transfer command. Must be a positive integer, not: ${args.VALUE}`)
+            log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
 
-        return this.token.transfer(args.TO, args.VALUE)
+        return this.token.send(
+            methodName,
+            [args.TO, args.VALUE],
+            `transfer ${args.VALUE} tokens to address ${args.TO}`)
     }
 
     transferFrom(args)
     {
+        const methodName = 'transferFrom'
+
         if (!args.FROM || !args.FROM.match(regEx.ethereumAddress)) {
-            log.error(`Invalid FROM address "${args.FROM}" for the transfer command. Must be a 40 char hexadecimal with a 0x prefix`)
+            log.error(`Invalid from address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
         if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid TO address "${args.TO}" for the transfer command. Must be a 40 char hexadecimal with a 0x prefix`)
+            log.error(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
         if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
-            log.error(`Invalid value for the transfer from command. Must be a positive integer, not: ${args.VALUE}`)
+            log.error(`Invalid value for the approve from command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
 
-        return this.token.transferFrom(args.TO, args.FROM, args.VALUE)
+        return this.token.send(
+            methodName,
+            [args.TO, args.FROM, args.VALUE],
+            `transfer ${args.VALUE} tokens from address ${args.FROM} to address ${args.TO}`)
     }
 
-    approve(args) {
+    approve(args)
+    {
+        const methodName = 'transferFrom'
 
+        if (!args.SPENDER || !args.SPENDER.match(regEx.ethereumAddress)) {
+            log.error(`Invalid spender address "${args.SPENDER}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+            return
+        }
+        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+            log.error(`Invalid value for the ${methodName} from command. Must be a positive integer, not: ${args.VALUE}`)
+            return
+        }
+
+        return this.token.send(
+            methodName,
+            [args.SPENDER, args.VALUE],
+            `approve ${args.VALUE} tokens to be spent by spender address ${args.SPENDER}`)
     }
-
 
     allowance(args)
     {
@@ -289,9 +313,11 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.allowance(args.OWNER, args.SENDER)
+        return this.token.call(
+            'allowance',
+            [args.OWNER, args.SENDER],
+            `get token allowance for spender ${args.SENDER} to transfer from owner ${args.OWNER}`)
     }
-
 
     balanceOf(args)
     {
@@ -300,50 +326,38 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.balanceOf(args.ADDRESS)
+        return this.token.call(
+            'balanceOf',
+            [args.ADDRESS],
+            `get token balance of owner address ${args.ADDRESS}`)
     }
 
     totalSupply() {
-        return this.token.totalSupply()
+        return this.token.call(
+            'totalSupply',
+            [],
+            `get total supply`)
     }
 
     symbol() {
-        return this.token.symbol()
+        return this.token.call(
+            'symbol',
+            [],
+            `get symbol`)
     }
 
     name() {
-        return this.token.name()
+        return this.token.call(
+            'name',
+            [],
+            `get name`)
     }
 
     decimals() {
-        return this.token.decimals()
-    }
-
-    setContractAddress(args) {
-        if (!args.ADDRESS || !args.ADDRESS.match(regEx.ethereumAddress)) {
-            log.error(`Invalid ADDRESS address "${args.ADDRESS}" for the transfer command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
-        }
-
-        this.contractAddress = args.ADDRESS
-
-        log.debug(`Contract address set to ${this.contractAddress}`)
-    }
-
-    // gets an instance of a contract
-    getContract(tokenAddress) {
-
-        if (this.tokenContracts[tokenAddress]) {
-            return this.tokenContracts[tokenAddress]
-        }
-        else {
-            console.log(`Creating contract instance for address ${tokenAddress}.`)
-
-            // Get Token contract instance
-            this.tokenContracts[tokenAddress] = this.web3Client.eth.contract(TokenContract.abi).at(tokenAddress)
-
-            return this.tokenContracts[tokenAddress]
-        }
+        return this.token.call(
+            'decimals',
+            [],
+            `get decimals`)
     }
 }
 module.exports = TokenDetailedMintableBurnableBlocks

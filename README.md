@@ -84,7 +84,6 @@ cd ..
 git clone https://github.com/LLK/scratch-vm.git
 cd scratch-vm
 npm install
-npm install web3@1.0.0-beta.34
 npm link
 cd ../scratch-gui
 npm link scratch-vm
@@ -100,7 +99,6 @@ ln -s ../../build/contracts contracts
 cd ../
 cp gui/index.jsx ../../scratch-gui/src/lib/libraries/extensions/index.jsx
 cp vm/extension-manager.js ../../scratch-vm/src/extension-support/extension-manager.js
-cp gui/webpack.config.js ../../scratch-gui/webpack.config.js
 
 # start the Scratch React App
 cd ../../scratch-gui
@@ -159,6 +157,12 @@ truffle deploy --reset --network ropsten
 
 The contracts used by the Scratch extensions are based off [Open Zeppelin](https://docs.openzeppelin.org/) contract.
 * [TokenDetailedMintableBurnable](./contracts/TokenDetailedMintableBurnable.sol) is a [detailed](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Detailed.sol) Open Zeppelin [token contract](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20.sol) that is [Mintable](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Mintable.sol) and [Burnable](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Burnable.sol). This means tokens can be added by the minter or can be burnt by the token owner.
+
+## MetaMask
+
+[MetaMask](https://metamask.io/) is a browser extension that allows users to manage their Ethereum private keys in a variety of ways, including hardware wallets, while isolating them from the site context. MetaMask comes pre-loaded connections to Ethereum main and test networks via [Infura](https://infura.io/).
+
+See [MetaMask Developer Documentation](https://metamask.github.io/metamask-docs/) for more details on how to 
 
 # Testing
 

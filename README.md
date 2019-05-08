@@ -19,6 +19,23 @@ To load an extension, click the `Add Extension` button on the bottom left of the
 
 ![Add Extension](./docs/addExtensionButton.png "Add Extension")
 
+## Table of Contents
+
+- [Scratch](#scratch)
+  * [Quick Start](#quick-start)
+  * [What is Scratch?](#what-is-scratch)
+  * [Scratch 3.0](#scratch-30)
+  * [Scratch 3.0 Extensions](#scratch-30-extensions)
+  * [Hacking Scratch 3.0 Extensions](#hacking-scratch-30-extensions)
+  * [Scratch 3.0 Extension Development](#scratch-30-extension-development)
+    + [Prerequisite](#prerequisite)
+    + [Installation](#installation)
+    + [Customization](#customization)
+- [Ethereum](#ethereum)
+- [Testing](#testing)
+- [Docker](#docker)
+- [Continuous Integration](#continuous-integration)
+
 ## What is Scratch?
 [Scratch](https://scratch.mit.edu/) is a project of the Lifelong [Kindergarten Group](https://www.media.mit.edu/groups/lifelong-kindergarten/overview/) at the [MIT Media Lab](https://www.media.mit.edu/). It is provided free of charge.
 
@@ -128,11 +145,6 @@ The JavaScript in the extension file needs to be loaded via the `src/extension-s
 ```js
 tokenDetailedMintableBurnable: () => require('../extensions/custom/tokenDetailedMintableBurnable'),
 ```
-
-## Useful Scratch 3.0 links
-* [How to Develop Your Own Block for Scratch 3.0](https://medium.com/@hiroyuki.osaki/how-to-develop-your-own-block-for-scratch-3-0-1b5892026421) matches what has been done for this project.
-* The [Scratch 3.0 Extensions Specification](https://github.com/LLK/scratch-vm/wiki/Scratch-3.0-Extensions-Specification) is now out of date and does not work.
-* The unofficial Scratch 3 wiki is also now out of date. It covers how to install Scratch 3.0 on your local machine and develop an extension. See [Testing your Extensions](https://github.com/kyleplo/scratch-three-extension-docs/wiki/Testing-your-Extensions) and [Scratch GUI Getting Started](https://github.com/LLK/scratch-gui/wiki/Getting-Started) for more details.
 
 # Ethereum
 

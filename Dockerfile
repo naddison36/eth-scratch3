@@ -35,6 +35,7 @@ WORKDIR /scratch/scratch-vm
 RUN npm set progress=false && \
    npm config set depth 0 && \
    npm install && \
+   npm install web3@0.20.3 && \
    npm cache clean --force
 
 RUN npm link

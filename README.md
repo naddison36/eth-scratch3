@@ -58,7 +58,7 @@ In the Scratch editor, you can add collections of extra blocks called [extension
 The Scratch Team will be publishing specifications and guidelines for extensions in the future. Once available, you will be able to submit extensions to the Scratch Team for consideration in the official Scratch 3.0 extensions library. We’ll also provide guidelines for developing and distributing "experimental" extensions, which can be used to create projects on individual computers, but not shared in the Scratch online community.
 
 ## Hacking Scratch 3.0 Extensions
-Although Scratch extension specifications have not been released, a few people in the community have worked out how to hack together a Scratch 3.0 extension. Most of the work in this repository is based off the blog post [How to Develop Your Own Block for Scratch 3.0](https://medium.com/@hiroyuki.osaki/how-to-develop-your-own-block-for-scratch-3-0-1b5892026421).
+Although Scratch extension specifications have not been released, a few people in the community have worked out how to hack together a Scratch 3.0 extension. Most of the work in this repository is based on the blog post [How to Develop Your Own Block for Scratch 3.0](https://medium.com/@hiroyuki.osaki/how-to-develop-your-own-block-for-scratch-3-0-1b5892026421).
 
 An example Scratch game [Scratch Wars](https://scratch.mit.edu/projects/95284179/).
 
@@ -170,7 +170,9 @@ The contracts used by the Scratch extensions are based off [Open Zeppelin](https
 
 [MetaMask](https://metamask.io/) is a browser extension that allows users to manage their Ethereum private keys in a variety of ways, including hardware wallets, while isolating them from the site context. MetaMask comes pre-loaded connections to Ethereum main and test networks via [Infura](https://infura.io/).
 
-See [MetaMask Developer Documentation](https://metamask.github.io/metamask-docs/) for more details on how to 
+See [MetaMask Developer Documentation](https://metamask.github.io/metamask-docs/) for more details on how to interact with MetaMask. [10 Web3/Metamask Use Cases Every Blockchain Developer Needs to Know](https://ylv.io/10-web3-metamask-use-cases-ever-blockchain-developer-needs/) is also very useful. The official [Web3.js 0.2x.x](https://github.com/ethereum/wiki/wiki/JavaScript-API) documentation also helps.
+
+See [TokenDetailedMintableBurnable](./scratch/extensions/tokenDetailedMintableBurnable/TokenDetailedMintableBurnable.js) for an example of code that interacts with MetaMask.
 
 # Testing
 
@@ -210,7 +212,7 @@ docker run -it registry.heroku.com/eth-scratch3-prod/web:latest sh
 docker run -p 8601:8601 -e PORT=8601 registry.heroku.com/eth-scratch3-prod/web:latest
 ```
 
-This project is deploying to Heroku hence the `registry.heroku.com/eth-scratch3-prod` image names. These will need to be changed if deploying to other cloud based Container Registries.
+This project is deploying to Heroku hence the `registry.heroku.com/eth-scratch3-prod` image names. These will need to be changed if deploying to other cloud-based container registries.
 
 # Continuous Integration
 

@@ -1,6 +1,10 @@
-# Scratch
 
-## Quick Start
+# eth-scratch3
+
+> a Scratch 3.0 extension for interacting with Ethereum contracts.
+![Token Blocks](./docs/screenshotTokenBlocks.png "Token Blocks")
+
+# Quick Start
 
 The easiest way to play with the Scratch 3 extensions for Ethereum contracts is to run the Scratch server locally on a [Docker](https://www.docker.com/) container.
 ```bash
@@ -22,7 +26,6 @@ To load an extension, click the `Add Extension` button on the bottom left of the
 ## Table of Contents
 
 - [Scratch](#scratch)
-  * [Quick Start](#quick-start)
   * [What is Scratch?](#what-is-scratch)
   * [Scratch 3.0](#scratch-30)
   * [Scratch 3.0 Extensions](#scratch-30-extensions)
@@ -32,9 +35,13 @@ To load an extension, click the `Add Extension` button on the bottom left of the
     + [Installation](#installation)
     + [Customization](#customization)
 - [Ethereum](#ethereum)
+  * [Smart Contracts](#smart-contracts)
+  * [MetaMask](#metamask)
 - [Testing](#testing)
 - [Docker](#docker)
 - [Continuous Integration](#continuous-integration)
+
+# Scratch
 
 ## What is Scratch?
 [Scratch](https://scratch.mit.edu/) is a project of the Lifelong [Kindergarten Group](https://www.media.mit.edu/groups/lifelong-kindergarten/overview/) at the [MIT Media Lab](https://www.media.mit.edu/). It is provided free of charge.

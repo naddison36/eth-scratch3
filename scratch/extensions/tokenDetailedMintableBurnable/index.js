@@ -100,7 +100,7 @@ class TokenDetailedMintableBurnableBlocks {
                     // must be [ENCLOSED_WITHIN_SQUARE_BRACKETS].
                     text: formatMessage({
                         id: 'tokenDetailedMintableBurnable.transfer',
-                        default: 'Transfer [TO], [VALUE]',
+                        default: 'Transfer [VALUE] tokens to [TO]',
                         description: 'command text',
                     }),
 
@@ -129,7 +129,7 @@ class TokenDetailedMintableBurnableBlocks {
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
                         id: 'tokenDetailedMintableBurnable.transferFrom',
-                        default: 'Transfer from [FROM], [TO], [VALUE]',
+                        default: 'Transfer [VALUE] tokens from [FROM] to [TO], ',
                         description: 'command text',
                     }),
                     arguments: {
@@ -152,13 +152,66 @@ class TokenDetailedMintableBurnableBlocks {
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
                         id: 'tokenDetailedMintableBurnable.approve',
-                        default: 'Approve [SPENDER], [VALUE]',
+                        default: 'Approve [VALUE] tokens to be spent by spender [SPENDER]',
                         description: 'command text',
                     }),
                     arguments: {
                         SPENDER: {
                             type: ArgumentType.STRING,
                             defaultValue: 'spenderAddress',
+                        },
+                        VALUE: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0,
+                        },
+                    },
+                },
+                {
+                    opcode: 'mint',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'tokenDetailedMintableBurnable.mint',
+                        default: 'Mint [VALUE] tokens to [TO]',
+                        description: 'command text',
+                    }),
+                    arguments: {
+                        TO: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'toAddress',
+                        },
+                        VALUE: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0,
+                        },
+                    },
+                },
+                {
+                    opcode: 'burn',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'tokenDetailedMintableBurnable.burn',
+                        default: 'Burn [VALUE] tokens',
+                        description: 'command text',
+                    }),
+                    arguments: {
+                        VALUE: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0,
+                        },
+                    },
+                },
+                {
+                    opcode: 'burnFrom',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'tokenDetailedMintableBurnable.burnFrom',
+                        default: 'Burn [VALUE] tokens from [FROM]',
+                        description: 'command text',
+                    }),
+                    arguments: {
+                        FROM: {
+                            type: ArgumentType.STRING,
+                            defaultValue: 'fromAddress',
                         },
                         VALUE: {
                             type: ArgumentType.NUMBER,
@@ -300,6 +353,61 @@ class TokenDetailedMintableBurnableBlocks {
             methodName,
             [args.SPENDER, args.VALUE],
             `approve ${args.VALUE} tokens to be spent by spender address ${args.SPENDER}`)
+    }
+
+    mint(args)
+    {
+        const methodName = 'mint'
+
+        if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
+            log.error(`Invalid TO address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+            return
+        }
+
+        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+            log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
+            return
+        }
+
+        return this.token.send(
+            methodName,
+            [args.TO, args.VALUE],
+            `mint ${args.VALUE} tokens to address ${args.TO}`)
+    }
+
+    burn(args)
+    {
+        const methodName = 'burn'
+
+        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+            log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
+            return
+        }
+
+        return this.token.send(
+            methodName,
+            [args.VALUE],
+            `burn ${args.VALUE} tokens`)
+    }
+
+    burnFrom(args)
+    {
+        const methodName = 'burn'
+
+        if (!args.FROM || !args.FROM.match(regEx.ethereumAddress)) {
+            log.error(`Invalid FROM address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+            return
+        }
+
+        if (!Number.isInteger(args.VALUE) && args.VALUE < 0) {
+            log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
+            return
+        }
+
+        return this.token.send(
+            methodName,
+            [args.FROM, args.VALUE],
+            `mint ${args.VALUE} tokens to address ${args.TO}`)
     }
 
     allowance(args)

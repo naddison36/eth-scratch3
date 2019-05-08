@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "jest": "^24.7.1",
+    "markdown-toc": "^1.2.0",
     "openzeppelin-solidity": "^2.2.0",
     "solc": "^0.5.8",
     "truffle": "^5.0.13",

@@ -372,11 +372,6 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        if (!Number.isInteger(args.VALUE)) {
-            log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
-            return
-        }
-
         return this.token.send(
             methodName,
             [args.TO, args.VALUE],
@@ -395,10 +390,6 @@ class TokenDetailedMintableBurnableBlocks {
             log.error(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
-        if (!Number.isInteger(args.VALUE)) {
-            log.error(`Invalid value for the approve from command. Must be a positive integer, not: ${args.VALUE}`)
-            return
-        }
 
         return this.token.send(
             methodName,
@@ -412,10 +403,6 @@ class TokenDetailedMintableBurnableBlocks {
 
         if (!args.SPENDER || !args.SPENDER.match(regEx.ethereumAddress)) {
             log.error(`Invalid spender address "${args.SPENDER}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
-        }
-        if (!Number.isInteger(args.VALUE)) {
-            log.error(`Invalid value for the ${methodName} from command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
 
@@ -434,11 +421,6 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        if (!Number.isInteger(args.VALUE)) {
-            log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
-            return
-        }
-
         return this.token.send(
             methodName,
             [args.TO, args.VALUE],
@@ -448,11 +430,6 @@ class TokenDetailedMintableBurnableBlocks {
     burn(args)
     {
         const methodName = 'burn'
-
-        if (!Number.isInteger(args.VALUE)) {
-            log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
-            return
-        }
 
         return this.token.send(
             methodName,
@@ -466,11 +443,6 @@ class TokenDetailedMintableBurnableBlocks {
 
         if (!args.FROM || !args.FROM.match(regEx.ethereumAddress)) {
             log.error(`Invalid FROM address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
-        }
-
-        if (!Number.isInteger(args.VALUE)) {
-            log.error(`Invalid value for the ${methodName} command. Must be a positive integer, not: ${args.VALUE}`)
             return
         }
 

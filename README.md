@@ -2,7 +2,7 @@
 
 ## Quick Start
 
-The easiest way to play with the Scratch 3 extensions for Ethereum contracts is to run the Scratch server locally on Docker
+The easiest way to play with the Scratch 3 extensions for Ethereum contracts is to run the Scratch server locally on a [Docker](https://www.docker.com/) container.
 ```bash
 mkdir scratch
 cd scratch
@@ -24,6 +24,7 @@ To load an extension, click the `Add Extension` button on the bottom left of the
 The following software must be installed before running the installation steps
 - [Git](https://git-scm.com/downloads)
 - [Node.js](https://nodejs.org/en/download/)
+- [Docker](https://docs.docker.com/docker-for-mac/install/)
 
 ### Installation
 

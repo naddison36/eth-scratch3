@@ -1,0 +1,58 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:lts-stretch
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Set the GIT_HASH and HEROKU_APP_NAME env vars for use in later steps
+          command: |
+            echo "Set GIT_HASH to `git log -1 --pretty=%h`"
+            echo 'export GIT_HASH=`git log -1 --pretty=%h`' >> $BASH_ENV
+
+            echo "Set HEROKU_APP_NAME to eth-scratch3"
+            echo 'export HEROKU_APP_NAME="eth-scratch3"' >> $BASH_ENV
+      - run:
+          name: Login to Heroku Container Registry
+          command: >
+            echo "About to login to the Heroku Container Registry using the ${HEROKU_USERNAME} user";
+            docker login
+            --username=$HEROKU_USERNAME
+            --password=$HEROKU_AUTH_TOKEN
+            registry.heroku.com
+      # - run:
+      #     name: Pull images from Heroku Container Registry so the docker layers can be cached
+      #     command: |
+      #       docker pull registry.heroku.com/${HEROKU_APP_NAME}/base:latest || true
+      #       docker pull registry.heroku.com/${HEROKU_APP_NAME}/web:latest || true
+      # - run:
+      #     name: Build base image
+      #     command: >
+      #       docker build
+      #       --cache-from registry.heroku.com/${HEROKU_APP_NAME}/base:latest
+      #       -t registry.heroku.com/${HEROKU_APP_NAME}/base:latest
+      #       --target base
+      #       .
+      - run:
+          name: Build Scratch server image
+          command: >
+            docker build
+            -t registry.heroku.com/${HEROKU_APP_NAME}/web:latest
+            --target web
+            .
+      - run:
+          name: Push images to Heroku Container Registry
+          command: |
+            echo "About to push containers to the Heroku Container Registry for the Heroku app ${HEROKU_APP_NAME}"
+            # docker push registry.heroku.com/${HEROKU_APP_NAME}/base
+            docker push registry.heroku.com/${HEROKU_APP_NAME}/web
+      - deploy:
+          name: Release Scratch server image from the Heroku Container Registry
+          command: |
+            echo "About to release the Scratch server container to Heroku app ${HEROKU_APP_NAME}"
+
+            ./heroku/scripts/release.sh ${HEROKU_APP_NAME} web

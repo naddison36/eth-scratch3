@@ -2,6 +2,7 @@
 # eth-scratch3
 
 > a Scratch 3.0 extension for interacting with Ethereum contracts.
+
 ![Token Blocks](./docs/screenshotTokenBlocks.png "Token Blocks")
 
 # Quick Start

@@ -50,7 +50,7 @@ class TokenDetailedMintableBurnable {
             this.tokenContract = web3.eth.contract(TokenContract.abi)
 
             this.tokenContract.new(
-                ...params, 
+                ...params,
                 {data: TokenContract.bytecode},
                 (err, contract) =>
             {
@@ -79,7 +79,7 @@ class TokenDetailedMintableBurnable {
     {
         return new Promise((resolve, reject) => {
 
-            const sendDescription = `${description} using token contract ${this.contractAddress}`
+            const sendDescription = `${description} using contract with address ${this.contractAddress}`
 
             log.debug(`About to ${sendDescription}`)
 

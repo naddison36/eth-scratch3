@@ -83,7 +83,7 @@ class TokenDetailedMintableBurnableBlocks {
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
                         id: 'tokenDetailedMintableBurnable.deploy',
-                        default: 'Deploy contract with symbol [SYMBOL], name [NAME] and decimals [DECIMALS]',
+                        default: 'Deploy contract with symbol [SYMBOL] name [NAME] and decimals [DECIMALS]',
                         description: 'command text',
                     }),
                     arguments: {
@@ -171,7 +171,7 @@ class TokenDetailedMintableBurnableBlocks {
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
                         id: 'tokenDetailedMintableBurnable.transferFrom',
-                        default: 'Transfer [VALUE] tokens from [FROM] to [TO], ',
+                        default: 'Transfer [VALUE] tokens from [FROM] to [TO]',
                         description: 'command text',
                     }),
                     arguments: {

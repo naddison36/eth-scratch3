@@ -11,9 +11,33 @@ export default [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Detailed, mintable, burnable token"
+                defaultMessage="Simple Token"
                 description="Name of extension"
-                id="gui.extension.erc20.name"
+                id="gui.extension.tokenSimple.name"
+            />
+        ),
+        extensionId: 'tokenSimple',
+        collaborator: 'Nick Addison',
+        // iconURL: boostIconURL,
+        // insetIconURL: boostInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Just an ERC20 token"
+                description="Description of extension"
+                id="gui.extension.tokenSimple.description"
+            />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        internetConnectionRequired: true
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="Full Token"
+                description="Name of extension"
+                id="gui.extension.tokenDetailedMintableBurnable.name"
             />
         ),
         extensionId: 'tokenDetailedMintableBurnable',
@@ -24,7 +48,7 @@ export default [
             <FormattedMessage
                 defaultMessage="A detailed ERC20 token that is mintable and burnable"
                 description="Description of extension"
-                id="gui.extension.erc20.description"
+                id="gui.extension.tokenDetailedMintableBurnable.description"
             />
         ),
         featured: true,

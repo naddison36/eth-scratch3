@@ -6,9 +6,9 @@ const log = require('../../../util/log')
 
 const regEx = require('../regEx')
 
-const Token = require('./TokenDetailedMintableBurnable')
+const Token = require('./TokenSimple')
 
-class TokenDetailedMintableBurnableBlocks {
+class TokenSimpleBlocks {
 
     constructor(runtimeProxy) {
         this.runtime = runtimeProxy
@@ -21,7 +21,7 @@ class TokenDetailedMintableBurnableBlocks {
         return {
             // Required: the machine-readable name of this extension.
             // Will be used as the extension's namespace.
-            id: 'tokenDetailedMintableBurnable',
+            id: 'tokenSimple',
 
             // Optional: the human-readable name of this extension as string.
             // This and any other string to be displayed in the Scratch UI may either be
@@ -35,8 +35,8 @@ class TokenDetailedMintableBurnableBlocks {
             // See also: https://github.com/yahoo/react-intl/wiki/API#formatmessage
             // name: 'Crypto Beasts',
             name: formatMessage({
-                id: 'tokenDetailedMintableBurnable.categoryName',
-                default: 'Full Token',
+                id: 'tokenSimple.categoryName',
+                default: 'Simple ERC20 Token',
                 description: 'extension name',
             }),
 
@@ -63,7 +63,7 @@ class TokenDetailedMintableBurnableBlocks {
                     opcode: 'setContract',
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.setContract',
+                        id: 'tokenSimple.setContract',
                         default: 'Set contract [ADDRESS] on network with id [NETWORK_ID]',
                         description: 'command text',
                     }),
@@ -82,20 +82,12 @@ class TokenDetailedMintableBurnableBlocks {
                     opcode: 'deploy',
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.deploy',
-                        default: 'Deploy contract with symbol [SYMBOL] name [NAME] and decimals [DECIMALS]',
+                        id: 'tokenSimple.deploy',
+                        default: 'Deploy contract with total supply [TOTAL_SUPPLY]',
                         description: 'command text',
                     }),
                     arguments: {
-                        SYMBOL: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'symbol',
-                        },
-                        NAME: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'name',
-                        },
-                        DECIMALS: {
+                        TOTAL_SUPPLY: {
                             type: ArgumentType.NUMBER,
                             defaultValue: 0,
                         },
@@ -141,7 +133,7 @@ class TokenDetailedMintableBurnableBlocks {
                     // placeholders. Argument placeholders should be in [MACRO_CASE] and
                     // must be [ENCLOSED_WITHIN_SQUARE_BRACKETS].
                     text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.transfer',
+                        id: 'tokenSimple.transfer',
                         default: 'Transfer [VALUE] tokens to [TO]',
                         description: 'command text',
                     }),
@@ -170,7 +162,7 @@ class TokenDetailedMintableBurnableBlocks {
                     opcode: 'transferFrom',
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.transferFrom',
+                        id: 'tokenSimple.transferFrom',
                         default: 'Transfer [VALUE] tokens from [FROM] to [TO]',
                         description: 'command text',
                     }),
@@ -193,7 +185,7 @@ class TokenDetailedMintableBurnableBlocks {
                     opcode: 'approve',
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.approve',
+                        id: 'tokenSimple.approve',
                         default: 'Approve [VALUE] tokens to be spent by spender [SPENDER]',
                         description: 'command text',
                     }),
@@ -209,63 +201,10 @@ class TokenDetailedMintableBurnableBlocks {
                     },
                 },
                 {
-                    opcode: 'mint',
-                    blockType: BlockType.COMMAND,
-                    text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.mint',
-                        default: 'Mint [VALUE] tokens to [TO]',
-                        description: 'command text',
-                    }),
-                    arguments: {
-                        TO: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'toAddress',
-                        },
-                        VALUE: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 0,
-                        },
-                    },
-                },
-                {
-                    opcode: 'burn',
-                    blockType: BlockType.COMMAND,
-                    text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.burn',
-                        default: 'Burn [VALUE] tokens',
-                        description: 'command text',
-                    }),
-                    arguments: {
-                        VALUE: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 0,
-                        },
-                    },
-                },
-                {
-                    opcode: 'burnFrom',
-                    blockType: BlockType.COMMAND,
-                    text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.burnFrom',
-                        default: 'Burn [VALUE] tokens from [FROM]',
-                        description: 'command text',
-                    }),
-                    arguments: {
-                        FROM: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'fromAddress',
-                        },
-                        VALUE: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 0,
-                        },
-                    },
-                },
-                {
                     opcode: 'balanceOf',
                     blockType: BlockType.REPORTER,
                     text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.balanceOf',
+                        id: 'tokenSimple.balanceOf',
                         default: 'Balance of [ADDRESS]',
                         description: 'command text',
                     }),
@@ -280,7 +219,7 @@ class TokenDetailedMintableBurnableBlocks {
                     opcode: 'allowance',
                     blockType: BlockType.REPORTER,
                     text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.allowance',
+                        id: 'tokenSimple.allowance',
                         default: 'Allowance from [OWNER] to [SPENDER]',
                         description: 'command text',
                     }),
@@ -299,35 +238,8 @@ class TokenDetailedMintableBurnableBlocks {
                     opcode: 'totalSupply',
                     blockType: BlockType.REPORTER,
                     text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.totalSupply',
+                        id: 'tokenSimple.totalSupply',
                         default: 'Total supply',
-                        description: 'command text',
-                    }),
-                },
-                {
-                    opcode: 'symbol',
-                    blockType: BlockType.REPORTER,
-                    text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.symbol',
-                        default: 'Symbol',
-                        description: 'command text',
-                    }),
-                },
-                {
-                    opcode: 'name',
-                    blockType: BlockType.REPORTER,
-                    text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.name',
-                        default: 'Name',
-                        description: 'command text',
-                    }),
-                },
-                {
-                    opcode: 'decimals',
-                    blockType: BlockType.REPORTER,
-                    text: formatMessage({
-                        id: 'tokenDetailedMintableBurnable.decimals',
-                        default: 'Decimals',
                         description: 'command text',
                     }),
                 },
@@ -349,18 +261,9 @@ class TokenDetailedMintableBurnableBlocks {
     }
 
     deploy(args) {
-        if (!args.SYMBOL || typeof args.SYMBOL !== 'string') {
-            log.error(`Invalid symbol "${args.SYMBOL}" for contract deploy command. Must be a string`)
-            return
-        }
-        if (!args.NAME || typeof args.NAME !== 'string') {
-            log.error(`Invalid name "${args.NAME}" for contract deploy command. Must be a string`)
-            return
-        }
-
         return this.token.deploy(
-            [args.SYMBOL, args.NAME, args.DECIMALS],
-            `deploy token contract with symbol ${args.SYMBOL}, name ${args.NAME} and decimals ${args.DECIMALS}`)
+            [args.TOTAL_SUPPLY],
+            `deploy token contract with total supply of ${args.TOTAL_SUPPLY}`)
     }
 
     transfer(args)
@@ -412,46 +315,6 @@ class TokenDetailedMintableBurnableBlocks {
             `approve ${args.VALUE} tokens to be spent by spender address ${args.SPENDER}`)
     }
 
-    mint(args)
-    {
-        const methodName = 'mint'
-
-        if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid TO address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
-        }
-
-        return this.token.send(
-            methodName,
-            [args.TO, args.VALUE],
-            `mint ${args.VALUE} tokens to address ${args.TO}`)
-    }
-
-    burn(args)
-    {
-        const methodName = 'burn'
-
-        return this.token.send(
-            methodName,
-            [args.VALUE],
-            `burn ${args.VALUE} tokens`)
-    }
-
-    burnFrom(args)
-    {
-        const methodName = 'burn'
-
-        if (!args.FROM || !args.FROM.match(regEx.ethereumAddress)) {
-            log.error(`Invalid FROM address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
-        }
-
-        return this.token.send(
-            methodName,
-            [args.FROM, args.VALUE],
-            `mint ${args.VALUE} tokens to address ${args.TO}`)
-    }
-
     allowance(args)
     {
         if (!args.OWNER || !args.OWNER.match(regEx.ethereumAddress)) {
@@ -488,26 +351,5 @@ class TokenDetailedMintableBurnableBlocks {
             [],
             `get total supply`)
     }
-
-    symbol() {
-        return this.token.call(
-            'symbol',
-            [],
-            `get symbol`)
-    }
-
-    name() {
-        return this.token.call(
-            'name',
-            [],
-            `get name`)
-    }
-
-    decimals() {
-        return this.token.call(
-            'decimals',
-            [],
-            `get decimals`)
-    }
 }
-module.exports = TokenDetailedMintableBurnableBlocks
+module.exports = TokenSimpleBlocks

@@ -62,6 +62,10 @@ Although Scratch extension specifications have not been released, a few people i
 
 An example Scratch game [Scratch Wars](https://scratch.mit.edu/projects/95284179/).
 
+## Scratch Block Error Handling
+
+There is no native error handling in Scratch so the best you can do is watch the Browser's console. In Chrome, View -> Developer -> JavaScript Console. Longer term, a hat event block for errors should be created so errors can be fed back into the Scratch application.
+
 For more Scratch information, see the [Scratch FAQ](https://scratch.mit.edu/info/faq).
 
 ## Scratch 3.0 Extension Development
@@ -229,7 +233,8 @@ Currently, builds are automatically pushed to Heroku https://eth-scratch3.heroku
 
 # TODO
 
-* Hat blocks for emitted events
+* Hat event blocks for emitted contract events
+* Hat event block for feeding back errors
 * [ERC721](http://erc721.org/) non-fungible tokens
 * Generating an extension from a contract’s ABI
 * Integrating [Assist.js](https://github.com/blocknative/assist) for easier onboarding

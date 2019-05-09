@@ -1,5 +1,6 @@
+
 const BaseContract = require('../BaseContract')
-const TruffleContractDetails = require('../contracts/TokenDetailedMintableBurnable.json')
+const TruffleContractDetails = require('../contracts/TokenBasic.json')
 
 class Contract extends BaseContract {
 

@@ -11,20 +11,20 @@ export default [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Simple Token"
+                defaultMessage="Basic Token"
                 description="Name of extension"
-                id="gui.extension.tokenSimple.name"
+                id="gui.extension.tokenBasic.name"
             />
         ),
-        extensionId: 'tokenSimple',
+        extensionId: 'tokenBasic',
         collaborator: 'Nick Addison',
         // iconURL: boostIconURL,
         // insetIconURL: boostInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Just an ERC20 token"
+                defaultMessage="A basic ERC20 token"
                 description="Description of extension"
-                id="gui.extension.tokenSimple.description"
+                id="gui.extension.tokenBasic.description"
             />
         ),
         featured: true,
@@ -59,41 +59,25 @@ export default [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Music"
-                description="Name for the 'Music' extension"
-                id="gui.extension.music.name"
+                defaultMessage="Basic NFT"
+                description="Name of extension"
+                id="gui.extension.tokenNFTBasic.name"
             />
         ),
-        extensionId: 'music',
-        iconURL: musicIconURL,
-        insetIconURL: musicInsetIconURL,
+        extensionId: 'tokenNFTBasic',
+        collaborator: 'Nick Addison',
+        // iconURL: boostIconURL,
+        // insetIconURL: boostInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Play instruments and drums."
-                description="Description for the 'Music' extension"
-                id="gui.extension.music.description"
+                defaultMessage="A basic non-fungible token"
+                description="Description of extension"
+                id="gui.extension.tokenNFTBasic.description"
             />
         ),
-        featured: false
-    },
-    {
-        name: (
-            <FormattedMessage
-                defaultMessage="Pen"
-                description="Name for the 'Pen' extension"
-                id="gui.extension.pen.name"
-            />
-        ),
-        extensionId: 'pen',
-        iconURL: penIconURL,
-        insetIconURL: penInsetIconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="Draw with your sprites."
-                description="Description for the 'Pen' extension"
-                id="gui.extension.pen.description"
-            />
-        ),
-        featured: false
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        internetConnectionRequired: true
     },
 ];

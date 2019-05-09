@@ -6,14 +6,14 @@ const log = require('../../../util/log')
 
 const regEx = require('../regEx')
 
-const Token = require('./TokenDetailedMintableBurnable')
+const Contract = require('./TokenDetailedMintableBurnable')
 
 class TokenDetailedMintableBurnableBlocks {
 
     constructor(runtimeProxy) {
         this.runtime = runtimeProxy
 
-        this.token = new Token()
+        this.contract = new Contract()
     }
 
     getInfo() {
@@ -74,7 +74,7 @@ class TokenDetailedMintableBurnableBlocks {
                         },
                         NETWORK_ID: {
                             type: ArgumentType.NUMBER,
-                            defaultValue: this.token.network,
+                            defaultValue: this.contract.network,
                         },
                     },
                 },
@@ -342,7 +342,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        this.token.setContract({
+        this.contract.setContract({
             contractAddress: args.ADDRESS,
             network: args.NETWORK_ID,
         })
@@ -358,7 +358,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.deploy(
+        return this.contract.deploy(
             [args.SYMBOL, args.NAME, args.DECIMALS],
             `deploy token contract with symbol ${args.SYMBOL}, name ${args.NAME} and decimals ${args.DECIMALS}`)
     }
@@ -372,7 +372,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.TO, args.VALUE],
             `transfer ${args.VALUE} tokens to address ${args.TO}`)
@@ -391,7 +391,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.TO, args.FROM, args.VALUE],
             `transfer ${args.VALUE} tokens from address ${args.FROM} to address ${args.TO}`)
@@ -406,7 +406,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.SPENDER, args.VALUE],
             `approve ${args.VALUE} tokens to be spent by spender address ${args.SPENDER}`)
@@ -421,7 +421,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.TO, args.VALUE],
             `mint ${args.VALUE} tokens to address ${args.TO}`)
@@ -431,7 +431,7 @@ class TokenDetailedMintableBurnableBlocks {
     {
         const methodName = 'burn'
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.VALUE],
             `burn ${args.VALUE} tokens`)
@@ -446,7 +446,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.FROM, args.VALUE],
             `mint ${args.VALUE} tokens to address ${args.TO}`)
@@ -463,7 +463,7 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.call(
+        return this.contract.call(
             'allowance',
             [args.OWNER, args.SENDER],
             `get token allowance for spender ${args.SENDER} to transfer from owner ${args.OWNER}`)
@@ -476,35 +476,35 @@ class TokenDetailedMintableBurnableBlocks {
             return
         }
 
-        return this.token.call(
+        return this.contract.call(
             'balanceOf',
             [args.ADDRESS],
             `get token balance of owner address ${args.ADDRESS}`)
     }
 
     totalSupply() {
-        return this.token.call(
+        return this.contract.call(
             'totalSupply',
             [],
             `get total supply`)
     }
 
     symbol() {
-        return this.token.call(
+        return this.contract.call(
             'symbol',
             [],
             `get symbol`)
     }
 
     name() {
-        return this.token.call(
+        return this.contract.call(
             'name',
             [],
             `get name`)
     }
 
     decimals() {
-        return this.token.call(
+        return this.contract.call(
             'decimals',
             [],
             `get decimals`)

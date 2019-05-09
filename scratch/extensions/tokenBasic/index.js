@@ -5,15 +5,14 @@ const BlockType = require('../../../extension-support/block-type')
 const log = require('../../../util/log')
 
 const regEx = require('../regEx')
+const Contract = require('./TokenBasic')
 
-const Token = require('./TokenSimple')
-
-class TokenSimpleBlocks {
+class ContractBlocks {
 
     constructor(runtimeProxy) {
         this.runtime = runtimeProxy
 
-        this.token = new Token()
+        this.contract = new Contract()
     }
 
     getInfo() {
@@ -21,7 +20,7 @@ class TokenSimpleBlocks {
         return {
             // Required: the machine-readable name of this extension.
             // Will be used as the extension's namespace.
-            id: 'tokenSimple',
+            id: 'tokenBasic',
 
             // Optional: the human-readable name of this extension as string.
             // This and any other string to be displayed in the Scratch UI may either be
@@ -35,8 +34,8 @@ class TokenSimpleBlocks {
             // See also: https://github.com/yahoo/react-intl/wiki/API#formatmessage
             // name: 'Crypto Beasts',
             name: formatMessage({
-                id: 'tokenSimple.categoryName',
-                default: 'Simple ERC20 Token',
+                id: 'tokenBasic.categoryName',
+                default: 'Basic ERC20 Token',
                 description: 'extension name',
             }),
 
@@ -63,7 +62,7 @@ class TokenSimpleBlocks {
                     opcode: 'setContract',
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
-                        id: 'tokenSimple.setContract',
+                        id: 'tokenBasic.setContract',
                         default: 'Set contract [ADDRESS] on network with id [NETWORK_ID]',
                         description: 'command text',
                     }),
@@ -74,7 +73,7 @@ class TokenSimpleBlocks {
                         },
                         NETWORK_ID: {
                             type: ArgumentType.NUMBER,
-                            defaultValue: this.token.network,
+                            defaultValue: this.contract.network,
                         },
                     },
                 },
@@ -82,7 +81,7 @@ class TokenSimpleBlocks {
                     opcode: 'deploy',
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
-                        id: 'tokenSimple.deploy',
+                        id: 'tokenBasic.deploy',
                         default: 'Deploy contract with total supply [TOTAL_SUPPLY]',
                         description: 'command text',
                     }),
@@ -133,7 +132,7 @@ class TokenSimpleBlocks {
                     // placeholders. Argument placeholders should be in [MACRO_CASE] and
                     // must be [ENCLOSED_WITHIN_SQUARE_BRACKETS].
                     text: formatMessage({
-                        id: 'tokenSimple.transfer',
+                        id: 'tokenBasic.transfer',
                         default: 'Transfer [VALUE] tokens to [TO]',
                         description: 'command text',
                     }),
@@ -162,7 +161,7 @@ class TokenSimpleBlocks {
                     opcode: 'transferFrom',
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
-                        id: 'tokenSimple.transferFrom',
+                        id: 'tokenBasic.transferFrom',
                         default: 'Transfer [VALUE] tokens from [FROM] to [TO]',
                         description: 'command text',
                     }),
@@ -185,7 +184,7 @@ class TokenSimpleBlocks {
                     opcode: 'approve',
                     blockType: BlockType.COMMAND,
                     text: formatMessage({
-                        id: 'tokenSimple.approve',
+                        id: 'tokenBasic.approve',
                         default: 'Approve [VALUE] tokens to be spent by spender [SPENDER]',
                         description: 'command text',
                     }),
@@ -204,7 +203,7 @@ class TokenSimpleBlocks {
                     opcode: 'balanceOf',
                     blockType: BlockType.REPORTER,
                     text: formatMessage({
-                        id: 'tokenSimple.balanceOf',
+                        id: 'tokenBasic.balanceOf',
                         default: 'Balance of [ADDRESS]',
                         description: 'command text',
                     }),
@@ -219,7 +218,7 @@ class TokenSimpleBlocks {
                     opcode: 'allowance',
                     blockType: BlockType.REPORTER,
                     text: formatMessage({
-                        id: 'tokenSimple.allowance',
+                        id: 'tokenBasic.allowance',
                         default: 'Allowance from [OWNER] to [SPENDER]',
                         description: 'command text',
                     }),
@@ -238,7 +237,7 @@ class TokenSimpleBlocks {
                     opcode: 'totalSupply',
                     blockType: BlockType.REPORTER,
                     text: formatMessage({
-                        id: 'tokenSimple.totalSupply',
+                        id: 'tokenBasic.totalSupply',
                         default: 'Total supply',
                         description: 'command text',
                     }),
@@ -254,14 +253,14 @@ class TokenSimpleBlocks {
             return
         }
 
-        this.token.setContract({
+        this.contract.setContract({
             contractAddress: args.ADDRESS,
             network: args.NETWORK_ID,
         })
     }
 
     deploy(args) {
-        return this.token.deploy(
+        return this.contract.deploy(
             [args.TOTAL_SUPPLY],
             `deploy token contract with total supply of ${args.TOTAL_SUPPLY}`)
     }
@@ -275,7 +274,7 @@ class TokenSimpleBlocks {
             return
         }
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.TO, args.VALUE],
             `transfer ${args.VALUE} tokens to address ${args.TO}`)
@@ -294,7 +293,7 @@ class TokenSimpleBlocks {
             return
         }
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.TO, args.FROM, args.VALUE],
             `transfer ${args.VALUE} tokens from address ${args.FROM} to address ${args.TO}`)
@@ -309,7 +308,7 @@ class TokenSimpleBlocks {
             return
         }
 
-        return this.token.send(
+        return this.contract.send(
             methodName,
             [args.SPENDER, args.VALUE],
             `approve ${args.VALUE} tokens to be spent by spender address ${args.SPENDER}`)
@@ -326,7 +325,7 @@ class TokenSimpleBlocks {
             return
         }
 
-        return this.token.call(
+        return this.contract.call(
             'allowance',
             [args.OWNER, args.SENDER],
             `get token allowance for spender ${args.SENDER} to transfer from owner ${args.OWNER}`)
@@ -339,17 +338,17 @@ class TokenSimpleBlocks {
             return
         }
 
-        return this.token.call(
+        return this.contract.call(
             'balanceOf',
             [args.ADDRESS],
             `get token balance of owner address ${args.ADDRESS}`)
     }
 
     totalSupply() {
-        return this.token.call(
+        return this.contract.call(
             'totalSupply',
             [],
             `get total supply`)
     }
 }
-module.exports = TokenSimpleBlocks
+module.exports = ContractBlocks

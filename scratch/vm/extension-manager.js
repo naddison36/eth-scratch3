@@ -21,7 +21,8 @@ const builtinExtensions = {
     makeymakey: () => require('../extensions/scratch3_makeymakey'),
     // Custom extensions
     tokenDetailedMintableBurnable: () => require('../extensions/custom/tokenDetailedMintableBurnable'),
-    tokenSimple: () => require('../extensions/custom/tokenSimple'),
+    tokenBasic: () => require('../extensions/custom/tokenBasic'),
+    tokenNFTBasic: () => require('../extensions/custom/tokenNFTBasic'),
 };
 
 /**

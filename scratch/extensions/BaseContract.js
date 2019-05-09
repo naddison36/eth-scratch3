@@ -15,7 +15,7 @@ class BaseContract {
         else {
             // ethereum.enable()
             if (web3 && web3.version) {
-                log.debug(`Using injected web3 version ${web3.version.api} and selected address ${web3.selectedAddress}`)
+                log.debug(`Using injected web3 version ${web3.version.api}`)
             }
             else {
                 log.error(`Could not get version of injected web3`)

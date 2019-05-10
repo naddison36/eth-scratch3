@@ -13,6 +13,111 @@ class ContractBlocks {
         this.runtime = runtimeProxy
 
         this.contract = new Contract()
+
+        this.eventNames = ['Transfer', 'TransferFrom', 'Approve']
+        this.eventQueues = {}
+
+        for (let eventName of this.eventNames) {
+            this.registerEvent(eventName)
+        }
+
+        this.contract.startWatchingEvents()
+    }
+
+    registerEvent(eventName)
+    {
+        log.debug(`Registering event ${eventName}`)
+
+        // Register queue for emitted events
+        this.eventQueues[eventName] = {
+            queue: [],
+            pendingDequeue: false
+        }
+
+        // Add event listener to add events to the queue
+        this.contract.eventEmitter.on(eventName, (event) => {
+            log.info(`Adding ${eventName} event to queue with hash ${event.transactionHash}. Queue length ${this.eventQueues[eventName].queue.length}`)
+            this.eventQueues[eventName].queue.push(event)
+        })
+    }
+
+    // is there a new event that can be dequeued?
+    isQueuedEvent(args) {
+
+        const eventName = args.EVENT_NAME
+
+        if (!this.eventQueues || !this.eventQueues[eventName]) {
+            log.error(`Failed to find "${eventName}" event queue.`)
+            return false
+        }
+
+        const eventQueue = this.eventQueues[eventName]
+
+        if (eventQueue.queue.length > 0 && eventQueue.pendingDequeue === false) {
+            log.info(`When pending ${eventName} event with hash ${eventQueue.queue[0].transactionHash}`)
+            eventQueue.pendingDequeue = true
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
+    // dequeue a pending event
+    dequeueEvent(args)
+    {
+        const eventName = args.EVENT_NAME
+
+        const description = `dequeue the "${eventName}" event`
+
+        if (!this.eventQueues || !this.eventQueues[eventName]) {
+            log.error(`Failed to ${description} as failed to find the "${eventName}" event queue.`)
+            return
+        }
+
+        const eventQueue = this.eventQueues[eventName]
+
+        if (!eventQueue.pendingDequeue) {
+            log.error(`Failed to ${description} as no events are on the queue. Queue length ${eventQueue.queue.length}.`)
+            return
+        }
+
+        log.info(`About to ${description} with hash ${eventQueue.queue[0].transactionHash}`)
+
+        // remove the oldest event from the queue
+        eventQueue.queue.shift()
+        eventQueue.pendingDequeue = false
+
+        log.debug(`${eventQueue.queue.length} in the "${eventName}" event queue after dequeue`)
+    }
+
+    getQueuedEventProperty(args)
+    {
+        const eventName = args.EVENT_NAME
+        const propertyName = args.EVENT_PROPERTY.toLowerCase()
+
+        const description = `read property "${propertyName}" from queued "${eventName}" event`
+
+        if (!this.eventQueues || !this.eventQueues[eventName]) {
+            log.error(`Failed to ${description}. The ${eventName} queue does not exist.`)
+            return
+        }
+
+        const eventQueue = this.eventQueues[eventName]
+
+        if (!eventQueue.pendingDequeue) {
+            log.error(`Failed to ${description} as no events are on the queue. Queue length ${eventQueue.queue.length}.`)
+            return
+        }
+
+        if (!eventQueue.queue[0].args.hasOwnProperty(propertyName)) {
+            log.error(`Failed to ${description} as property does not exist on the queued event.`)
+            return
+        }
+
+        log.debug(`Property ${propertyName} from queued ${eventName} event with hash ${eventQueue.queue[0].transactionHash} has value ${eventQueue.queue[0].args[propertyName]}`)
+
+        return eventQueue.queue[0].args[propertyName]
     }
 
     getInfo() {
@@ -91,6 +196,59 @@ class ContractBlocks {
                             defaultValue: 0,
                         },
                     },
+                },
+                {
+                    opcode: 'isQueuedEvent',
+                    text: formatMessage({
+                        id: 'cryptoBeasts.isQueuedEvent',
+                        default: 'When [EVENT_NAME] event queued',
+                        description: 'command text',
+                    }),
+                    blockType: BlockType.HAT,
+                    arguments: {
+                        EVENT_NAME: {
+                            type: ArgumentType.STRING,
+                            menu: 'events',
+                            defaultValue: 'Transfer'
+                        }
+                    }
+                },
+                {
+                    opcode: 'dequeueEvent',
+                    text: formatMessage({
+                        id: 'cryptoBeasts.dequeueTransfer',
+                        default: 'Dequeue [EVENT_NAME] event',
+                        description: 'command text',
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        EVENT_NAME: {
+                            type: ArgumentType.STRING,
+                            menu: 'events',
+                            defaultValue: 'Transfer'
+                        }
+                    }
+                },
+                {
+                    opcode: 'getQueuedEventProperty',
+                    text: formatMessage({
+                        id: 'cryptoBeasts.getQueuedEventProperty',
+                        default: 'Property [EVENT_PROPERTY] of [EVENT_NAME] event',
+                        description: 'command text',
+                    }),
+                    blockType: BlockType.REPORTER,
+                    arguments: {
+                        EVENT_NAME: {
+                            type: ArgumentType.STRING,
+                            menu: 'events',
+                            defaultValue: 'Transfer'
+                        },
+                        EVENT_PROPERTY: {
+                            type: ArgumentType.STRING,
+                            menu: 'eventProperties',
+                            defaultValue: 'TO'
+                        }
+                    }
                 },
                 {
                     // Required: the machine-readable name of this operation.
@@ -243,6 +401,21 @@ class ContractBlocks {
                     }),
                 },
             ],
+
+            menus: {
+                events: [
+                    {text: 'Transfer', value: 'Transfer'},
+                    {text: 'TransferFrom', value: 'TransferFrom'},
+                    {text: 'Approve', value: 'Approve'},
+                ],
+                eventProperties: [
+                    {text: 'From', value: 'from'},
+                    {text: 'To', value: 'to'},
+                    {text: 'Value', value: 'value'},
+                    {text: 'Owner', value: 'owner'},
+                    {text: 'Spender', value: 'spender'},
+                ],
+            }
         }
     }
 

@@ -235,14 +235,10 @@ Currently, builds are automatically pushed to Heroku https://eth-scratch3.heroku
 
 * Hat event blocks for emitted contract events
 * Hat event block for feeding back errors
-* [ERC721](http://erc721.org/) non-fungible tokens
+* Extension for full [ERC721](http://erc721.org/) non-fungible tokens
 * Generating an extension from a contract’s ABI
 * Integrating [Assist.js](https://github.com/blocknative/assist) for easier onboarding
 * Deploy the Scratch server to another Cloud platform. eg AWS
 * Extension that uses Web3.js 1.x
 * Extension that uses [Ethers.js](https://docs.ethers.io/ethers.js/html/)
-* Add other contracts. eg
-    * ENS
-    * IDEX
-    * UniSwap
-    * MakerDAO
+

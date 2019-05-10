@@ -1,11 +1,13 @@
 const log = require('minilog')('eth-scratch3:TokenSimple')
 const VError = require('verror')
+const EventEmitter = require('events')
 
 class BaseContract {
 
     constructor(Contract, options = {}) {
 
         this.Contract = Contract
+        this.eventEmitter = new EventEmitter()
 
         if (typeof web3 === 'undefined') {
             log.warn('MetaMask is not installed so will load web3 locally')
@@ -116,6 +118,26 @@ class BaseContract {
 
                 resolve(returnedValue)
             })
+        })
+    }
+
+    startWatchingEvents() {
+
+        const eventDescription = `watching for events on contract with address ${this.contractAddress}`
+
+        log.debug(`Start ${eventDescription}`)
+
+        this.contract.allEvents().watch((err, event) =>
+        {
+            if (err) {
+                const error = new VError(err, `Failed ${eventDescription}.`)
+                log.error(error.message)
+                return callback(error)
+            }
+
+            log.info(`Got event ${event.event} from contract ${this.contractAddress}: ${JSON.stringify(event)}`)
+
+            this.eventEmitter.emit(event.event, event)
         })
     }
 }

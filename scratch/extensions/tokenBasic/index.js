@@ -1,9 +1,9 @@
+const log = require('minilog')('eth-scratch3:TokenBasic')
+
 const formatMessage = require('format-message')
 
 const ArgumentType = require('../../../extension-support/argument-type')
 const BlockType = require('../../../extension-support/block-type')
-const log = require('../../../util/log')
-
 const regEx = require('../regEx')
 const BaseBlocks = require('../BaseBlocks')
 const Contract = require('./TokenBasic')
@@ -11,17 +11,14 @@ const Contract = require('./TokenBasic')
 class ContractBlocks extends BaseBlocks {
 
     constructor(runtimeProxy) {
-
         super()
         this.contract = new Contract()
 
-        this.eventNames = ['Transfer', 'TransferFrom', 'Approve']
+        this.eventNames = ['Transfer', 'Approve']
 
         for (let eventName of this.eventNames) {
             this.registerEvent(eventName)
         }
-
-        this.contract.startWatchingEvents()
     }
 
     getInfo() {
@@ -33,6 +30,19 @@ class ContractBlocks extends BaseBlocks {
                 default: 'Basic ERC20 Token',
                 description: 'extension name',
             }),
+            menus: {
+                events: [
+                    {text: 'Transfer', value: 'Transfer'},
+                    {text: 'Approve', value: 'Approve'},
+                ],
+                eventProperties: [
+                    {text: 'From', value: 'from'},
+                    {text: 'To', value: 'to'},
+                    {text: 'Value', value: 'value'},
+                    {text: 'Owner', value: 'owner'},
+                    {text: 'Spender', value: 'spender'},
+                ],
+            },
             blocks: [
                 {
                     opcode: 'setContract',
@@ -54,24 +64,9 @@ class ContractBlocks extends BaseBlocks {
                     },
                 },
                 {
-                    opcode: 'deploy',
-                    blockType: BlockType.COMMAND,
-                    text: formatMessage({
-                        id: 'tokenBasic.deploy',
-                        default: 'Deploy contract with total supply [TOTAL_SUPPLY]',
-                        description: 'command text',
-                    }),
-                    arguments: {
-                        TOTAL_SUPPLY: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: 0,
-                        },
-                    },
-                },
-                {
                     opcode: 'isQueuedEvent',
                     text: formatMessage({
-                        id: 'cryptoBeasts.isQueuedEvent',
+                        id: 'tokenBasic.isQueuedEvent',
                         default: 'When [EVENT_NAME] event queued',
                         description: 'command text',
                     }),
@@ -85,25 +80,9 @@ class ContractBlocks extends BaseBlocks {
                     }
                 },
                 {
-                    opcode: 'dequeueEvent',
-                    text: formatMessage({
-                        id: 'cryptoBeasts.dequeueTransfer',
-                        default: 'Dequeue [EVENT_NAME] event',
-                        description: 'command text',
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        EVENT_NAME: {
-                            type: ArgumentType.STRING,
-                            menu: 'events',
-                            defaultValue: 'Transfer'
-                        }
-                    }
-                },
-                {
                     opcode: 'getQueuedEventProperty',
                     text: formatMessage({
-                        id: 'cryptoBeasts.getQueuedEventProperty',
+                        id: 'tokenBasic.getQueuedEventProperty',
                         default: 'Property [EVENT_PROPERTY] of [EVENT_NAME] event',
                         description: 'command text',
                     }),
@@ -120,6 +99,37 @@ class ContractBlocks extends BaseBlocks {
                             defaultValue: 'TO'
                         }
                     }
+                },
+                {
+                    opcode: 'dequeueEvent',
+                    text: formatMessage({
+                        id: 'tokenBasic.dequeueTransfer',
+                        default: 'Dequeue [EVENT_NAME] event',
+                        description: 'command text',
+                    }),
+                    blockType: BlockType.COMMAND,
+                    arguments: {
+                        EVENT_NAME: {
+                            type: ArgumentType.STRING,
+                            menu: 'events',
+                            defaultValue: 'Transfer'
+                        }
+                    }
+                },
+                {
+                    opcode: 'deploy',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'tokenBasic.deploy',
+                        default: 'Deploy contract with total supply [TOTAL_SUPPLY]',
+                        description: 'command text',
+                    }),
+                    arguments: {
+                        TOTAL_SUPPLY: {
+                            type: ArgumentType.NUMBER,
+                            defaultValue: 0,
+                        },
+                    },
                 },
                 {
                     opcode: 'transfer',
@@ -226,21 +236,6 @@ class ContractBlocks extends BaseBlocks {
                     }),
                 },
             ],
-
-            menus: {
-                events: [
-                    {text: 'Transfer', value: 'Transfer'},
-                    {text: 'TransferFrom', value: 'TransferFrom'},
-                    {text: 'Approve', value: 'Approve'},
-                ],
-                eventProperties: [
-                    {text: 'From', value: 'from'},
-                    {text: 'To', value: 'to'},
-                    {text: 'Value', value: 'value'},
-                    {text: 'Owner', value: 'owner'},
-                    {text: 'Spender', value: 'spender'},
-                ],
-            }
         }
     }
 

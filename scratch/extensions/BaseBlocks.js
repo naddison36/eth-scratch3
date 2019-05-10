@@ -1,4 +1,4 @@
-const log = require('../..//util/log')
+const log = require('minilog')('eth-scratch3:BaseBlocks')
 
 const regEx = require('./regEx')
 

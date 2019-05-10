@@ -1,4 +1,4 @@
-const log = require('minilog')('eth-scratch3:TokenSimple')
+const log = require('minilog')('eth-scratch3:BaseContract')
 const VError = require('verror')
 const EventEmitter = require('events')
 
@@ -37,6 +37,8 @@ class BaseContract {
         this.contract = this.web3Client.eth.contract(this.Contract.abi).at(this.contractAddress)
 
         log.debug(`Set contract to address ${this.contractAddress} for network ${this.network}`)
+
+        this.startWatchingEvents()
     }
 
     deploy(params, description)
@@ -56,7 +58,7 @@ class BaseContract {
             {
                 if(err) {
                     const error = new VError(err, `Failed to ${deployDescription}.`)
-                    log.error(error.message)
+                    log.error(error.stack)
                     return reject(error)
                 }
 
@@ -87,7 +89,7 @@ class BaseContract {
             {
                 if(err) {
                     const error = new VError(err, `Failed to ${sendDescription}.`)
-                    log.error(error.message)
+                    log.error(error.stack)
                     return reject(error)
                 }
 
@@ -104,13 +106,13 @@ class BaseContract {
 
             const callDescription = `${description} using contract with address ${this.contractAddress}`
 
-            log.debug(`About to ${callDescription}`)
+            log.debug(`About to ${callDescription} calling method name ${methodName}`)
 
             this.contract[methodName](...args, (err, returnedValue) =>
             {
                 if(err) {
                     const error = new VError(err, `Failed to ${callDescription}.`)
-                    log.error(error.message)
+                    log.error(error.stack)
                     return reject(error)
                 }
 
@@ -131,7 +133,7 @@ class BaseContract {
         {
             if (err) {
                 const error = new VError(err, `Failed ${eventDescription}.`)
-                log.error(error.message)
+                log.error(error.stack)
                 return callback(error)
             }
 

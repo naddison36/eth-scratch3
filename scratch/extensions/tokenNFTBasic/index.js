@@ -1,63 +1,31 @@
-const formatMessage = require('format-message')
+const log = require('minilog')('eth-scratch3:TokenNFTBasic')
+const TruffleContractDetails = require('../contracts/TokenNFTBasic.json')
 
+const formatMessage = require('format-message')
 const ArgumentType = require('../../../extension-support/argument-type')
 const BlockType = require('../../../extension-support/block-type')
-const log = require('../../../util/log')
 
 const regEx = require('../regEx')
+const BaseBlocks = require('../BaseBlocks')
+const BaseContract = require('../BaseContract')
 
-const Contract = require('./TokenNFTBasic')
-
-class ContractBlocks {
+class ContractBlocks extends BaseBlocks {
 
     constructor(runtimeProxy) {
-        this.runtime = runtimeProxy
+        super(runtimeProxy)
 
-        this.contract = new Contract()
+        this.contract = new BaseContract(TruffleContractDetails)
     }
 
     getInfo() {
 
         return {
-            // Required: the machine-readable name of this extension.
-            // Will be used as the extension's namespace.
             id: 'tokenNFTBasic',
-
-            // Optional: the human-readable name of this extension as string.
-            // This and any other string to be displayed in the Scratch UI may either be
-            // a string or a call to `formatMessage` a plain string will not be
-            // translated whereas a call to `formatMessage` will connect the string
-            // to the translation map (see below). The `formatMessage` call is
-            // similar to `formatMessage` from `react-intl` in form, but will actually
-            // call some extension support code to do its magic. For example, we will
-            // internally namespace the messages such that two extensions could have
-            // messages with the same ID without colliding.
-            // See also: https://github.com/yahoo/react-intl/wiki/API#formatmessage
-            // name: 'Crypto Beasts',
             name: formatMessage({
                 id: 'tokenNFTBasic.categoryName',
-                default: 'Basic Non-Fungible Token',
+                default: 'Basic Non-Fungible Token (ERC721)',
                 description: 'extension name',
             }),
-
-            // Optional: URI for a block icon, to display at the edge of each block for this
-            // extension. Data URI OK.
-            // TODO: what file types are OK? All web images? Just PNG?
-            // blockIconURI: 'data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAFCAAAAACyOJm3AAAAFklEQVQYV2P4DwMMEMgAI/+DEUIMBgAEWB7i7uidhAAAAABJRU5ErkJggg==',
-
-            // Optional: URI for an icon to be displayed in the blocks category menu.
-            // If not present, the menu will display the block icon, if one is present.
-            // Otherwise, the category menu shows its default filled circle.
-            // Data URI OK.
-            // TODO: what file types are OK? All web images? Just PNG?
-            // menuIconURI: 'data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAFCAAAAACyOJm3AAAAFklEQVQYV2P4DwMMEMgAI/+DEUIMBgAEWB7i7uidhAAAAABJRU5ErkJggg==',
-
-            // Optional: Link to documentation content for this extension.
-            // If not present, offer no link.
-            // docsURI: 'https://github.com/naddison36/loom-scratch-tcg',
-
-            // Required: the list of blocks implemented by this extension,
-            // in the order intended for display.
             blocks: [
                 {
                     opcode: 'setContract',
@@ -239,6 +207,15 @@ class ContractBlocks {
                         },
                     },
                 },
+                {
+                    opcode: 'getContractAddress',
+                    blockType: BlockType.REPORTER,
+                    text: formatMessage({
+                        id: 'tokenBasic.contractAddress',
+                        default: 'Contract Address',
+                        description: 'command text',
+                    }),
+                },
             ],
         }
     }
@@ -374,7 +351,7 @@ class ContractBlocks {
             [args.OWNER],
             `count tokens owned by ${args.OWNER}`)
     }
-    
+
     ownerOf(args)
     {
         const methodName = 'ownerOf'

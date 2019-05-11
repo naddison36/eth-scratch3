@@ -459,12 +459,12 @@
     "3": {
       "events": {},
       "links": {},
-      "address": "0x3fb99d454723D71f6930FE1AD35F6933a9deCf95",
-      "transactionHash": "0x8b19506b8a3ebe18b289989fd39bcedd08730fa77a2e6651ac86ac19682ec97b"
+      "address": "0x30110778A160C6C4f0Ff7D923B7F393663AD5aF5",
+      "transactionHash": "0xa4791f299a91dcd50f10846630fa8b9deef9f9a9f7e26b088fd9c3819fb41044"
     }
   },
   "schemaVersion": "3.0.6",
-  "updatedAt": "2019-05-09T07:15:26.323Z",
+  "updatedAt": "2019-05-11T11:39:46.798Z",
   "devdoc": {
     "methods": {
       "approve(address,uint256)": {

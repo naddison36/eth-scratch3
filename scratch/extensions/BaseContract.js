@@ -9,21 +9,19 @@ class BaseContract {
         this.Contract = Contract
         this.eventEmitter = new EventEmitter()
 
-        if (typeof web3 === 'undefined') {
-            log.warn('MetaMask is not installed so will load web3 locally')
+        // For MetaMask >= 4.14.0
+        if (window.ethereum) {
+            this.web3Client = new Web3(ethereum)
+        }
+        // For MetaMask < 4.14.0
+        else if (window.web3) {
+            this.web3Client = new Web3(web3.currentProvider)
+        }
+        // This should only be used for unit testing
+        else {
+            log.warn('MetaMask is not installed so will load web3 locally.')
             Web3 = require('web3')
             this.web3Client = new Web3(options.provider)
-        }
-        else {
-            // ethereum.enable()
-            if (web3 && web3.version) {
-                log.debug(`Using injected web3 version ${web3.version.api}`)
-            }
-            else {
-                log.error(`Could not get version of injected web3`)
-            }
-
-            this.web3Client = new Web3(web3.currentProvider)
         }
 
         this.setContract(options)
@@ -41,38 +39,79 @@ class BaseContract {
         this.startWatchingEvents()
     }
 
+    // of selected address of the browser wallet is not available, then
+    // request access to the browser wallet from the user
+    enableEthereum() {
+
+        if (ethereum.selectedAddress) {
+            return Promise.resolve(ethereum.selectedAddress)
+        }
+
+        log.debug(`About to request access to the browser wallet from the user`)
+
+        return new Promise((resolve, reject) => {
+
+            ethereum.enable()
+            .then(() => {
+                log.info(`Enabled browser wallet with selected address ${ethereum.selectedAddress}`)
+                resolve(ethereum.selectedAddress)
+            })
+            .catch((err) => {
+                const error = new VError(err, `Failed to enable the browser wallet.`)
+                log.error(error.message)
+                reject(error)
+            })
+        })
+    }
+
     deploy(params, description)
     {
         return new Promise((resolve, reject) => {
 
-            const deployDescription = `${description} to network with id ${web3.version.network} with params ${JSON.stringify(params)}`
+            description = `${description} using sender address ${ethereum.selectedAddress}, network with id ${ethereum.networkVersion} with params ${JSON.stringify(params)}`
 
-            log.debug(`About to ${deployDescription}`)
+            this.enableEthereum()
+            .then(account => {
 
-            this.contract = web3.eth.contract(this.Contract.abi)
+                description = `${description} and sender address ${ethereum.selectedAddress}`
 
-            this.contract.new(
-                ...params,
-                {data: this.Contract.bytecode},
-                (err, contract) =>
-            {
-                if(err) {
-                    const error = new VError(err, `Failed to ${deployDescription}.`)
+                this.contract = web3.eth.contract(this.Contract.abi)
+
+                try {
+                    this.contract.new(
+                        ...params,
+                        {data: this.Contract.bytecode},
+                        (err, contract) =>
+                    {
+                        if(err) {
+                            const error = new VError(err, `Failed to ${description}.`)
+                            log.error(error.stack)
+                            return reject(error)
+                        }
+    
+                        if(!contract.address) {
+                            log.info(`Got transaction hash ${contract.transactionHash} for ${description}`)
+                        }
+                        else {
+                            this.setContract({
+                                contractAddress: contract.address,
+                                network: web3.version.network
+                            })
+    
+                            resolve(contract.address)
+                        }
+                    })
+                }
+                catch (err) {
+                    const error = new VError(err, `Failed to send ${description}.`)
                     log.error(error.stack)
                     return reject(error)
                 }
-
-                if(!contract.address) {
-                    log.info(`Got transaction hash ${contract.transactionHash} for ${deployDescription}`)
-                }
-                else {
-                    this.setContract({
-                        contractAddress: contract.address,
-                        network: web3.version.network
-                    })
-
-                    resolve(contract.address)
-                }
+            })
+            .catch(err => {
+                const error = new VError(err, `Failed to enable browser wallet before ${description}`)
+                log.error(error.stack)
+                reject(error)
             })
         })
     }
@@ -81,21 +120,40 @@ class BaseContract {
     {
         return new Promise((resolve, reject) => {
 
-            const sendDescription = `${description} using contract with address ${this.contractAddress}`
+            description = `${description} using contract with address ${this.contractAddress}, network with id ${ethereum.networkVersion}`
 
-            log.debug(`About to ${sendDescription}`)
+            log.debug(`About to ${description}`)
 
-            this.contract[methodName].sendTransaction(...args, (err, transactionHash) =>
-            {
-                if(err) {
-                    const error = new VError(err, `Failed to ${sendDescription}.`)
+            this.enableEthereum()
+            .then(account => {
+
+                description = `${description} and sender address ${ethereum.selectedAddress}`
+
+                try {
+                    this.contract[methodName].sendTransaction(...args,
+                    (err, transactionHash) =>
+                    {
+                        if(err) {
+                            const error = new VError(err, `Failed to ${description}.`)
+                            log.error(error.stack)
+                            return reject(error)
+                        }
+        
+                        log.info(`Got transaction hash ${transactionHash} for ${description}`)
+        
+                        resolve(transactionHash)
+                    })
+                }
+                catch (err) {
+                    const error = new VError(err, `Failed to send ${description}.`)
                     log.error(error.stack)
                     return reject(error)
                 }
-
-                log.info(`Got transaction hash ${transactionHash} for ${sendDescription}`)
-
-                resolve(transactionHash)
+            })
+            .catch(err => {
+                const error = new VError(err, `Failed to enable browser wallet before ${description}`)
+                log.error(error.stack)
+                reject(error)
             })
         })
     }

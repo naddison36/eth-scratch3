@@ -1,18 +1,19 @@
 const log = require('minilog')('eth-scratch3:TokenBasic')
+const TruffleContractDetails = require('../contracts/TokenBasic.json')
 
 const formatMessage = require('format-message')
-
 const ArgumentType = require('../../../extension-support/argument-type')
 const BlockType = require('../../../extension-support/block-type')
+
 const regEx = require('../regEx')
 const BaseBlocks = require('../BaseBlocks')
-const Contract = require('./TokenBasic')
+const BaseContract = require('../BaseContract')
 
 class ContractBlocks extends BaseBlocks {
 
     constructor(runtimeProxy) {
-        super()
-        this.contract = new Contract()
+        super(runtimeProxy)
+        this.contract = new BaseContract(TruffleContractDetails)
 
         this.eventNames = ['Transfer', 'Approve']
 
@@ -67,7 +68,7 @@ class ContractBlocks extends BaseBlocks {
                     opcode: 'isQueuedEvent',
                     text: formatMessage({
                         id: 'tokenBasic.isQueuedEvent',
-                        default: 'When [EVENT_NAME] event queued',
+                        default: 'When [EVENT_NAME] event',
                         description: 'command text',
                     }),
                     blockType: BlockType.HAT,
@@ -104,7 +105,7 @@ class ContractBlocks extends BaseBlocks {
                     opcode: 'dequeueEvent',
                     text: formatMessage({
                         id: 'tokenBasic.dequeueTransfer',
-                        default: 'Dequeue [EVENT_NAME] event',
+                        default: 'Clear [EVENT_NAME] event',
                         description: 'command text',
                     }),
                     blockType: BlockType.COMMAND,
@@ -232,6 +233,15 @@ class ContractBlocks extends BaseBlocks {
                     text: formatMessage({
                         id: 'tokenBasic.totalSupply',
                         default: 'Total supply',
+                        description: 'command text',
+                    }),
+                },
+                {
+                    opcode: 'getContractAddress',
+                    blockType: BlockType.REPORTER,
+                    text: formatMessage({
+                        id: 'tokenBasic.contractAddress',
+                        default: 'Contract Address',
                         description: 'command text',
                     }),
                 },

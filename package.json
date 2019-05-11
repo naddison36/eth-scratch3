@@ -11,6 +11,7 @@
     "runWebImage": "docker run -p 8601:8601 -e PORT=8601 registry.heroku.com/eth-scratch3/web:latest",
     "pushWebImage": "docker push registry.heroku.com/eth-scratch3/web:latest",
     "deployLocal": "truffle deploy --reset",
+    "deployRopsten": "truffle deploy --reset --network ropsten",
     "test": "./node_modules/.bin/jest --forceExit --detectOpenHandles --runInBand"
   },
   "repository": {

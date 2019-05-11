@@ -118,5 +118,15 @@ class BaseBlocks {
             network: args.NETWORK_ID,
         })
     }
+
+    getContractAddress()
+    {
+        if (!this.contract || !this.contract.contractAddress) {
+            log.error(`Failed to get contract address as it has not been set.`)
+            return
+        }
+
+        return this.contract.contractAddress
+    }
 }
 module.exports = BaseBlocks

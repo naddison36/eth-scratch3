@@ -1,18 +1,19 @@
 const log = require('minilog')('eth-scratch3:TokenDetailedMintableBurnable')
+const TruffleContractDetails = require('../contracts/TokenDetailedMintableBurnable.json')
 
 const formatMessage = require('format-message')
-
 const ArgumentType = require('../../../extension-support/argument-type')
 const BlockType = require('../../../extension-support/block-type')
+
 const regEx = require('../regEx')
 const BaseBlocks = require('../BaseBlocks')
-const Contract = require('./TokenDetailedMintableBurnable')
+const BaseContract = require('../BaseContract')
 
 class ContractBlocks extends BaseBlocks {
 
     constructor(runtimeProxy) {
         super()
-        this.contract = new Contract()
+        this.contract = new BaseContract(TruffleContractDetails)
 
         this.eventNames = ['Transfer', 'Approve']
 
@@ -27,7 +28,7 @@ class ContractBlocks extends BaseBlocks {
             id: 'tokenDetailedMintableBurnable',
             name: formatMessage({
                 id: 'tokenDetailedMintableBurnable.categoryName',
-                default: 'Full Token',
+                default: 'Full Token (ERC20)',
                 description: 'extension name',
             }),
             menus: {
@@ -320,6 +321,15 @@ class ContractBlocks extends BaseBlocks {
                     text: formatMessage({
                         id: 'tokenDetailedMintableBurnable.decimals',
                         default: 'Decimals',
+                        description: 'command text',
+                    }),
+                },
+                {
+                    opcode: 'getContractAddress',
+                    blockType: BlockType.REPORTER,
+                    text: formatMessage({
+                        id: 'tokenBasic.contractAddress',
+                        default: 'Contract Address',
                         description: 'command text',
                     }),
                 },

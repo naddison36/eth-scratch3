@@ -5,9 +5,18 @@
 
 ![Token Blocks](./docs/screenshotTokenBlocks.png "Token Blocks")
 
+# Playground
+
+For now, a Scratch 3.0 server with some token extensions have been made publicly available at https://eth-scratch3.herokuapp.com/
+This may be moved or even taken down in the future.
+
+To load an extension, click the `Add Extension` button on the bottom left of the Scratch UI.
+
+![Add Extension](./docs/addExtensionButton.png "Add Extension")
+
 # Quick Start
 
-The easiest way to play with the Scratch 3 extensions for Ethereum contracts is to run the Scratch server locally on a [Docker](https://www.docker.com/) container.
+The easiest way to play with the extensions locally is to run a [Docker](https://www.docker.com/) container.
 ```bash
 mkdir scratch
 cd scratch
@@ -19,10 +28,6 @@ docker run -p 8601:8601 -e PORT=8601 eth-scratch3
 ```
 
 After the server starts, Scratch should be available at [http://localhost:8601](http://localhost:8601)
-
-To load an extension, click the `Add Extension` button on the bottom left of the Scratch UI.
-
-![Add Extension](./docs/addExtensionButton.png "Add Extension")
 
 ## Table of Contents
 
@@ -38,9 +43,9 @@ To load an extension, click the `Add Extension` button on the bottom left of the
 - [Ethereum](#ethereum)
   * [Smart Contracts](#smart-contracts)
   * [MetaMask](#metamask)
-- [Testing](#testing)
 - [Docker](#docker)
 - [Continuous Integration](#continuous-integration)
+- [TODO](#TODO)
 
 # Scratch
 
@@ -165,39 +170,20 @@ To deploy the token contract to the Ropsten public test network.
 truffle deploy --reset --network ropsten
 ```
 
-The ERC20 extension currently works with the [0xd80193ff5773256e4dd864141210aef04789b48e](https://ropsten.etherscan.io/address/0xd80193ff5773256e4dd864141210aef04789b48e) contract deployed to the Ropsten testnet.
+The extension for the basic ERC20 contract currently works with the [0x999D5f944DD6f97911b2f854638d1fDEe297bE3F](https://ropsten.etherscan.io/address/0x999D5f944DD6f97911b2f854638d1fDEe297bE3F) contract deployed to the Ropsten testnet.
 
 ## Smart Contracts
 
 The contracts used by the Scratch extensions are based off [Open Zeppelin](https://docs.openzeppelin.org/) contract.
-* [TokenDetailedMintableBurnable](./contracts/TokenDetailedMintableBurnable.sol) is a [detailed](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Detailed.sol) Open Zeppelin [token contract](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20.sol) that is [Mintable](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Mintable.sol) and [Burnable](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Burnable.sol). This means tokens can be added by the minter or can be burnt by the token owner.
+* [TokenBasic](./contracts/TokenBasic.sol) is an Open Zeppelin [ERC20 token contract](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20.sol)
+* [TokenDetailedMintableBurnable](./contracts/TokenDetailedMintableBurnable.sol) is a [detailed](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Detailed.sol) Open Zeppelin [ERC20 token contract](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20.sol) that is [Mintable](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Mintable.sol) and [Burnable](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20Burnable.sol). This means tokens can be added by the minter or can be burnt by the token owner.
+* [TokenNFTBasic](./contracts/TokenNFTBasic.sol) is an Open Zeppelin [ERC721 non-fungible token contract](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/token/ERC20/ERC20.sol)
 
 ## MetaMask
 
 [MetaMask](https://metamask.io/) is a browser extension that allows users to manage their Ethereum private keys in a variety of ways, including hardware wallets, while isolating them from the site context. MetaMask comes pre-loaded connections to Ethereum main and test networks via [Infura](https://infura.io/).
 
 See [MetaMask Developer Documentation](https://metamask.github.io/metamask-docs/) for more details on how to interact with MetaMask. [10 Web3/Metamask Use Cases Every Blockchain Developer Needs to Know](https://ylv.io/10-web3-metamask-use-cases-ever-blockchain-developer-needs/) is also very useful. The official [Web3.js 0.2x.x](https://github.com/ethereum/wiki/wiki/JavaScript-API) documentation also helps.
-
-See [TokenDetailedMintableBurnable](./scratch/extensions/tokenDetailedMintableBurnable/TokenDetailedMintableBurnable.js) for an example of code that interacts with MetaMask.
-
-# Testing
-
-[Jest](https://jestjs.io/) tests are used to test the Scratch extensions.
-
-`npm run test` will run the Jest tests. This runs from the test script in the package.json
-```bash
-./node_modules/.bin/jest --forceExit --detectOpenHandles --runInBand
-```
-
-To run a particular test, use the `-t` option. eg
-```bash
-./node_modules/.bin/jest --forceExit --detectOpenHandles --runInBand -t TokenDetailedMintableBurnable
-```
-
-If npx is installed globally, the tests can also be run by
-```bash
-npx --forceExit --detectOpenHandles --runInBand
-```
 
 # Docker
 

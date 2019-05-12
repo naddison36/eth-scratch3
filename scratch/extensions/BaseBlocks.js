@@ -1,5 +1,9 @@
 const log = require('minilog')('eth-scratch3:BaseBlocks')
 
+const formatMessage = require('format-message')
+const ArgumentType = require('../../extension-support/argument-type')
+const BlockType = require('../../extension-support/block-type')
+
 const regEx = require('./regEx')
 
 class BaseBlocks {
@@ -8,6 +12,90 @@ class BaseBlocks {
         this.runtime = runtimeProxy
 
         this.eventQueues = {}
+    }
+
+    commonBlocks() {
+        return [
+            {
+                opcode: 'setContract',
+                blockType: BlockType.COMMAND,
+                text: formatMessage({
+                    id: 'tokenBasic.setContract',
+                    default: 'Set contract [ADDRESS] on network with id [NETWORK_ID]',
+                    description: 'command text',
+                }),
+                arguments: {
+                    ADDRESS: {
+                        type: ArgumentType.STRING,
+                        defaultValue: 'tokenAddress',
+                    },
+                    NETWORK_ID: {
+                        type: ArgumentType.NUMBER,
+                        defaultValue: this.contract.network,
+                    },
+                },
+            },
+            {
+                opcode: 'isQueuedEvent',
+                text: formatMessage({
+                    id: 'tokenBasic.isQueuedEvent',
+                    default: 'When [EVENT_NAME] event',
+                    description: 'command text',
+                }),
+                blockType: BlockType.HAT,
+                arguments: {
+                    EVENT_NAME: {
+                        type: ArgumentType.STRING,
+                        menu: 'events',
+                        defaultValue: 'Transfer'
+                    }
+                }
+            },
+            {
+                opcode: 'getQueuedEventProperty',
+                text: formatMessage({
+                    id: 'tokenBasic.getQueuedEventProperty',
+                    default: 'Property [EVENT_PROPERTY] of [EVENT_NAME] event',
+                    description: 'command text',
+                }),
+                blockType: BlockType.REPORTER,
+                arguments: {
+                    EVENT_NAME: {
+                        type: ArgumentType.STRING,
+                        menu: 'events',
+                        defaultValue: 'Transfer'
+                    },
+                    EVENT_PROPERTY: {
+                        type: ArgumentType.STRING,
+                        menu: 'eventProperties',
+                        defaultValue: 'TO'
+                    }
+                }
+            },
+            {
+                opcode: 'dequeueEvent',
+                text: formatMessage({
+                    id: 'tokenBasic.dequeueTransfer',
+                    default: 'Clear [EVENT_NAME] event',
+                    description: 'command text',
+                }),
+                blockType: BlockType.COMMAND,
+                arguments: {
+                    EVENT_NAME: {
+                        type: ArgumentType.STRING,
+                        menu: 'events',
+                        defaultValue: 'Transfer'
+                    }
+                }
+            },
+        ]
+    }
+
+    initEvents(eventNames)
+    {
+        for (let eventName of eventNames) {
+            this.registerEvent(eventName)
+        }
     }
 
     registerEvent(eventName)
@@ -24,6 +112,16 @@ class BaseBlocks {
         this.contract.eventEmitter.on(eventName, (event) => {
             this.eventQueues[eventName].queue.push(event)
             log.info(`Added ${eventName} event to queue with tx hash ${event.transactionHash}. Queue length ${this.eventQueues[eventName].queue.length}`)
+        })
+    }
+
+    eventsMenu() {
+        // for each event queue
+        return Object.keys(this.eventQueues).map(eventName => {
+            return {
+                text: eventName,
+                value: eventName,
+            }
         })
     }
 

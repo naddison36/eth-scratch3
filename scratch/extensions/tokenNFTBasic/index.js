@@ -15,6 +15,8 @@ class ContractBlocks extends BaseBlocks {
         super(runtimeProxy)
 
         this.contract = new BaseContract(TruffleContractDetails)
+
+        this.initEvents(['Transfer', 'Approve', 'ApprovalForAll'])
     }
 
     getInfo() {
@@ -26,26 +28,19 @@ class ContractBlocks extends BaseBlocks {
                 default: 'Basic Non-Fungible Token (ERC721)',
                 description: 'extension name',
             }),
+            menus: {
+                events: this.eventsMenu(),
+                eventProperties: [
+                    {text: 'From', value: 'from'},
+                    {text: 'To', value: 'to'},
+                    {text: 'Token ID', value: 'tokenId'},
+                    {text: 'Owner', value: 'owner'},
+                    {text: 'Operator', value: 'operator'},
+                    {text: 'Approved', value: 'approved'},
+                ],
+            },
             blocks: [
-                {
-                    opcode: 'setContract',
-                    blockType: BlockType.COMMAND,
-                    text: formatMessage({
-                        id: 'tokenNFTBasic.setContract',
-                        default: 'Set contract [ADDRESS] on network with id [NETWORK_ID]',
-                        description: 'command text',
-                    }),
-                    arguments: {
-                        ADDRESS: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'tokenAddress',
-                        },
-                        NETWORK_ID: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: this.contract.network,
-                        },
-                    },
-                },
+                ...this.commonBlocks(),
                 {
                     opcode: 'deploy',
                     blockType: BlockType.COMMAND,

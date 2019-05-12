@@ -1,12 +1,6 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
-import musicIconURL from './music/music.png';
-import musicInsetIconURL from './music/music-small.svg';
-
-import penIconURL from './pen/pen.png';
-import penInsetIconURL from './pen/pen-small.svg';
-
 export default [
     {
         name: (
@@ -70,7 +64,7 @@ export default [
         // insetIconURL: boostInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="A basic non-fungible token"
+                defaultMessage="A basic ERC721 non-fungible token"
                 description="Description of extension"
                 id="gui.extension.tokenNFTBasic.description"
             />

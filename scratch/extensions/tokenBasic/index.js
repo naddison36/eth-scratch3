@@ -15,11 +15,7 @@ class ContractBlocks extends BaseBlocks {
         super(runtimeProxy)
         this.contract = new BaseContract(TruffleContractDetails)
 
-        this.eventNames = ['Transfer', 'Approve']
-
-        for (let eventName of this.eventNames) {
-            this.registerEvent(eventName)
-        }
+        this.initEvents(['Transfer', 'Approve'])
     }
 
     getInfo() {
@@ -32,10 +28,7 @@ class ContractBlocks extends BaseBlocks {
                 description: 'extension name',
             }),
             menus: {
-                events: [
-                    {text: 'Transfer', value: 'Transfer'},
-                    {text: 'Approve', value: 'Approve'},
-                ],
+                events: this.eventsMenu(),
                 eventProperties: [
                     {text: 'From', value: 'from'},
                     {text: 'To', value: 'to'},
@@ -45,78 +38,7 @@ class ContractBlocks extends BaseBlocks {
                 ],
             },
             blocks: [
-                {
-                    opcode: 'setContract',
-                    blockType: BlockType.COMMAND,
-                    text: formatMessage({
-                        id: 'tokenBasic.setContract',
-                        default: 'Set contract [ADDRESS] on network with id [NETWORK_ID]',
-                        description: 'command text',
-                    }),
-                    arguments: {
-                        ADDRESS: {
-                            type: ArgumentType.STRING,
-                            defaultValue: 'tokenAddress',
-                        },
-                        NETWORK_ID: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: this.contract.network,
-                        },
-                    },
-                },
-                {
-                    opcode: 'isQueuedEvent',
-                    text: formatMessage({
-                        id: 'tokenBasic.isQueuedEvent',
-                        default: 'When [EVENT_NAME] event',
-                        description: 'command text',
-                    }),
-                    blockType: BlockType.HAT,
-                    arguments: {
-                        EVENT_NAME: {
-                            type: ArgumentType.STRING,
-                            menu: 'events',
-                            defaultValue: 'Transfer'
-                        }
-                    }
-                },
-                {
-                    opcode: 'getQueuedEventProperty',
-                    text: formatMessage({
-                        id: 'tokenBasic.getQueuedEventProperty',
-                        default: 'Property [EVENT_PROPERTY] of [EVENT_NAME] event',
-                        description: 'command text',
-                    }),
-                    blockType: BlockType.REPORTER,
-                    arguments: {
-                        EVENT_NAME: {
-                            type: ArgumentType.STRING,
-                            menu: 'events',
-                            defaultValue: 'Transfer'
-                        },
-                        EVENT_PROPERTY: {
-                            type: ArgumentType.STRING,
-                            menu: 'eventProperties',
-                            defaultValue: 'TO'
-                        }
-                    }
-                },
-                {
-                    opcode: 'dequeueEvent',
-                    text: formatMessage({
-                        id: 'tokenBasic.dequeueTransfer',
-                        default: 'Clear [EVENT_NAME] event',
-                        description: 'command text',
-                    }),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        EVENT_NAME: {
-                            type: ArgumentType.STRING,
-                            menu: 'events',
-                            defaultValue: 'Transfer'
-                        }
-                    }
-                },
+              ...this.commonBlocks(),
                 {
                     opcode: 'deploy',
                     blockType: BlockType.COMMAND,

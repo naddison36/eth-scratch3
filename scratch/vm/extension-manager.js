@@ -20,6 +20,7 @@ const builtinExtensions = {
     ev3: () => require('../extensions/scratch3_ev3'),
     makeymakey: () => require('../extensions/scratch3_makeymakey'),
     // Custom extensions
+    ether: () => require('../extensions/custom/ether'),
     tokenDetailedMintableBurnable: () => require('../extensions/custom/tokenDetailedMintableBurnable'),
     tokenBasic: () => require('../extensions/custom/tokenBasic'),
     tokenNFTBasic: () => require('../extensions/custom/tokenNFTBasic'),

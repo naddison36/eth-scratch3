@@ -4,6 +4,30 @@ import {FormattedMessage} from 'react-intl';
 export default [
     {
         name: (
+          <FormattedMessage
+            defaultMessage="Ether"
+            description="Name of extension"
+            id="gui.extension.ether.name"
+          />
+        ),
+        extensionId: 'ether',
+        collaborator: 'Nick Addison',
+        // iconURL: boostIconURL,
+        // insetIconURL: boostInsetIconURL,
+        description: (
+          <FormattedMessage
+            defaultMessage="Ether blocks"
+            description="Description of extension"
+            id="gui.extension.ether.description"
+          />
+        ),
+        featured: true,
+        disabled: false,
+        bluetoothRequired: false,
+        internetConnectionRequired: true
+    },
+    {
+        name: (
             <FormattedMessage
                 defaultMessage="Basic Token"
                 description="Name of extension"

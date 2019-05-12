@@ -36,6 +36,15 @@ class BaseBlocks {
                 },
             },
             {
+                opcode: 'getContractAddress',
+                blockType: BlockType.REPORTER,
+                text: formatMessage({
+                    id: 'tokenBasic.contractAddress',
+                    default: 'Contract Address',
+                    description: 'command text',
+                }),
+            },
+            {
                 opcode: 'isQueuedEvent',
                 text: formatMessage({
                     id: 'tokenBasic.isQueuedEvent',

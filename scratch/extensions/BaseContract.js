@@ -88,7 +88,7 @@ class BaseContract {
                             log.error(error.stack)
                             return reject(error)
                         }
-    
+
                         if(!contract.address) {
                             log.info(`Got transaction hash ${contract.transactionHash} for ${description}`)
                         }
@@ -97,7 +97,7 @@ class BaseContract {
                                 contractAddress: contract.address,
                                 network: web3.version.network
                             })
-    
+
                             resolve(contract.address)
                         }
                     })
@@ -138,9 +138,9 @@ class BaseContract {
                             log.error(error.stack)
                             return reject(error)
                         }
-        
+
                         log.info(`Got transaction hash ${transactionHash} for ${description}`)
-        
+
                         resolve(transactionHash)
                     })
                 }
@@ -166,18 +166,24 @@ class BaseContract {
 
             log.debug(`About to ${callDescription} calling method name ${methodName}`)
 
-            this.contract[methodName](...args, (err, returnedValue) =>
-            {
-                if(err) {
-                    const error = new VError(err, `Failed to ${callDescription}.`)
-                    log.error(error.stack)
-                    return reject(error)
-                }
+            try {
+                this.contract[methodName](...args, (err, returnedValue) => {
+                    if (err) {
+                        const error = new VError(err, `Failed to ${callDescription}.`)
+                        log.error(error.stack)
+                        return reject(error)
+                    }
 
-                log.info(`Got ${returnedValue} from ${callDescription}`)
+                    log.info(`Got ${returnedValue} from ${callDescription}`)
 
-                resolve(returnedValue)
-            })
+                    resolve(returnedValue)
+                })
+            }
+            catch (err) {
+                const error = new VError(err, `Failed to call ${description}.`)
+                log.error(error.stack)
+                return reject(error)
+            }
         })
     }
 

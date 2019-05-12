@@ -158,15 +158,6 @@ class ContractBlocks extends BaseBlocks {
                         description: 'command text',
                     }),
                 },
-                {
-                    opcode: 'getContractAddress',
-                    blockType: BlockType.REPORTER,
-                    text: formatMessage({
-                        id: 'tokenBasic.contractAddress',
-                        default: 'Contract Address',
-                        description: 'command text',
-                    }),
-                },
             ],
         }
     }
@@ -228,12 +219,14 @@ class ContractBlocks extends BaseBlocks {
 
     allowance(args)
     {
+        const methodName = 'allowance'
+
         if (!args.OWNER || !args.OWNER.match(regEx.ethereumAddress)) {
-            log.error(`Invalid owner address "${args.OWNER}" for the allowance command. Must be a 40 char hexadecimal with a 0x prefix`)
+            log.error(`Invalid owner address "${args.OWNER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
         if (!args.SENDER || !args.SENDER.match(regEx.ethereumAddress)) {
-            log.error(`Invalid spender address "${args.SENDER}" for the allowance command. Must be a 40 char hexadecimal with a 0x prefix`)
+            log.error(`Invalid spender address "${args.SENDER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
 
@@ -245,8 +238,10 @@ class ContractBlocks extends BaseBlocks {
 
     balanceOf(args)
     {
+        const methodName = 'balanceOf'
+
         if (!args.ADDRESS || !args.ADDRESS.match(regEx.ethereumAddress)) {
-            log.error(`Invalid ADDRESS address "${args.ADDRESS}" for the transfer command. Must be a 40 char hexadecimal with a 0x prefix`)
+            log.error(`Invalid owner address "${args.ADDRESS}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
             return
         }
 

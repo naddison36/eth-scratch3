@@ -202,15 +202,6 @@ class ContractBlocks extends BaseBlocks {
                         },
                     },
                 },
-                {
-                    opcode: 'getContractAddress',
-                    blockType: BlockType.REPORTER,
-                    text: formatMessage({
-                        id: 'tokenBasic.contractAddress',
-                        default: 'Contract Address',
-                        description: 'command text',
-                    }),
-                },
             ],
         }
     }

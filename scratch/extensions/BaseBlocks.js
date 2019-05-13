@@ -164,15 +164,13 @@ class BaseBlocks {
         const description = `dequeue the "${eventName}" event`
 
         if (!this.eventQueues || !this.eventQueues[eventName]) {
-            log.error(`Failed to ${description} as failed to find the "${eventName}" event queue.`)
-            return
+            return this.errorHandler(`Failed to ${description} as failed to find the "${eventName}" event queue.`)
         }
 
         const eventQueue = this.eventQueues[eventName]
 
         if (!eventQueue.pendingDequeue) {
-            log.error(`Failed to ${description} as no events are on the queue. Queue length ${eventQueue.queue.length}.`)
-            return
+            return this.errorHandler(`Failed to ${description} as no events are on the queue. Queue length ${eventQueue.queue.length}.`)
         }
 
         log.info(`About to ${description} with hash ${eventQueue.queue[0].transactionHash}`)
@@ -216,8 +214,7 @@ class BaseBlocks {
     setContract(args) {
         const methodName = 'setContractAddress'
         if (!args.ADDRESS || !args.ADDRESS.match(regEx.ethereumAddress)) {
-            log.error(`Invalid address "${args.ADDRESS}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid address "${args.ADDRESS}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
         }
 
         this.contract.setContract({
@@ -234,6 +231,11 @@ class BaseBlocks {
         }
 
         return this.contract.contractAddress
+    }
+
+    errorHandler(errorMessage) {
+        log.error(errorMessage)
+        return errorMessage
     }
 }
 module.exports = BaseBlocks

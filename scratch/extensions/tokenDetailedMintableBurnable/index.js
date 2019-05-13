@@ -252,12 +252,13 @@ class ContractBlocks extends BaseBlocks {
 
     deploy(args) {
         if (!args.SYMBOL || typeof args.SYMBOL !== 'string') {
-            log.error(`Invalid symbol "${args.SYMBOL}" for contract deploy command. Must be a string`)
-            return
+            return this.errorHandler(`Invalid symbol "${args.SYMBOL}" for contract deploy command. Must be a string`)
         }
         if (!args.NAME || typeof args.NAME !== 'string') {
-            log.error(`Invalid name "${args.NAME}" for contract deploy command. Must be a string`)
-            return
+            return this.errorHandler(`Invalid name "${args.NAME}" for contract deploy command. Must be a string`)
+        }
+        if (!(args.DECIMALS >= 0)) {
+            return this.errorHandler(`Invalid decimals "${args.DECIMALS}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.deploy(
@@ -270,8 +271,10 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'transfer'
 
         if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid TO address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid TO address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+        }
+        if (!(args.VALUE >= 0)) {
+            return this.errorHandler(`Invalid value "${args.VALUE}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.send(
@@ -285,12 +288,13 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'transferFrom'
 
         if (!args.FROM || !args.FROM.match(regEx.ethereumAddress)) {
-            log.error(`Invalid from address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid from address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
         }
         if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+        }
+        if (!(args.VALUE >= 0)) {
+            return this.errorHandler(`Invalid value "${args.VALUE}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.send(
@@ -304,8 +308,10 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'transferFrom'
 
         if (!args.SPENDER || !args.SPENDER.match(regEx.ethereumAddress)) {
-            log.error(`Invalid spender address "${args.SPENDER}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid spender address "${args.SPENDER}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+        }
+        if (!(args.VALUE >= 0)) {
+            return this.errorHandler(`Invalid value "${args.VALUE}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.send(
@@ -319,8 +325,10 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'mint'
 
         if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid TO address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid TO address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+        }
+        if (!(args.VALUE >= 0)) {
+            return this.errorHandler(`Invalid value "${args.VALUE}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.send(
@@ -333,6 +341,10 @@ class ContractBlocks extends BaseBlocks {
     {
         const methodName = 'burn'
 
+        if (!(args.VALUE >= 0)) {
+            return this.errorHandler(`Invalid value "${args.VALUE}" for the ${methodName} command. Must be a positive integer.`)
+        }
+
         return this.contract.send(
             methodName,
             [args.VALUE],
@@ -344,8 +356,10 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'burn'
 
         if (!args.FROM || !args.FROM.match(regEx.ethereumAddress)) {
-            log.error(`Invalid FROM address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid FROM address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+        }
+        if (!(args.VALUE >= 0)) {
+            return this.errorHandler(`Invalid value "${args.VALUE}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.send(
@@ -359,12 +373,10 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'allowance'
 
         if (!args.OWNER || !args.OWNER.match(regEx.ethereumAddress)) {
-            log.error(`Invalid owner address "${args.OWNER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid owner address "${args.OWNER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
         }
         if (!args.SENDER || !args.SENDER.match(regEx.ethereumAddress)) {
-            log.error(`Invalid spender address "${args.SENDER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid spender address "${args.SENDER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
         }
 
         return this.contract.call(
@@ -378,8 +390,7 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'balanceOf'
 
         if (!args.ADDRESS || !args.ADDRESS.match(regEx.ethereumAddress)) {
-            log.error(`Invalid owner address "${args.ADDRESS}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid owner address "${args.ADDRESS}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
         }
 
         return this.contract.call(

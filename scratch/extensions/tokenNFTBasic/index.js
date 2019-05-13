@@ -206,19 +206,6 @@ class ContractBlocks extends BaseBlocks {
         }
     }
 
-    setContract(args) {
-        const methodName = 'setContractAddress'
-        if (!args.ADDRESS || !args.ADDRESS.match(regEx.ethereumAddress)) {
-            log.error(`Invalid address "${args.ADDRESS}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
-        }
-
-        this.contract.setContract({
-            contractAddress: args.ADDRESS,
-            network: args.NETWORK_ID,
-        })
-    }
-
     deploy(args) {
         return this.contract.deploy(
             [],
@@ -230,12 +217,13 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'transferFrom'
 
         if (!args.FROM || !args.FROM.match(regEx.ethereumAddress)) {
-            log.error(`Invalid to address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid to address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
         }
         if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+        }
+        if (!(args.TOKEN_ID >= 0)) {
+            return this.errorHandler(`Invalid token id "${args.TOKEN_ID}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.send(
@@ -249,12 +237,13 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'safeTransferFrom'
 
         if (!args.FROM || !args.FROM.match(regEx.ethereumAddress)) {
-            log.error(`Invalid to address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid to address "${args.FROM}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
         }
         if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+        }
+        if (!(args.TOKEN_ID >= 0)) {
+            return this.errorHandler(`Invalid token id "${args.TOKEN_ID}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.send(
@@ -268,8 +257,10 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'approve'
 
         if (!args.TO || !args.TO.match(regEx.ethereumAddress)) {
-            log.error(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid to address "${args.TO}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
+        }
+        if (!(args.TOKEN_ID >= 0)) {
+            return this.errorHandler(`Invalid token id "${args.TOKEN_ID}" for the ${methodName} command. Must be a positive integer.`)
         }
 
         return this.contract.send(
@@ -282,6 +273,10 @@ class ContractBlocks extends BaseBlocks {
     {
         const methodName = 'getApproved'
 
+        if (!(args.TOKEN_ID >= 0)) {
+            return this.errorHandler(`Invalid token id "${args.TOKEN_ID}" for the ${methodName} command. Must be a positive integer.`)
+        }
+
         return this.contract.call(
             methodName,
             [args.TOKEN_ID],
@@ -293,8 +288,7 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'setApprovalForAll'
 
         if (!args.OPERATOR || !args.OPERATOR.match(regEx.ethereumAddress)) {
-            log.error(`Invalid operator address "${args.OPERATOR}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid operator address "${args.OPERATOR}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)
         }
 
         return this.contract.send(
@@ -309,12 +303,10 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'isApprovedForAll'
 
         if (!args.OWNER || !args.OWNER.match(regEx.ethereumAddress)) {
-            log.error(`Invalid owner address "${args.OWNER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid owner address "${args.OWNER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
         }
         if (!args.OPERATOR || !args.OPERATOR.match(regEx.ethereumAddress)) {
-            log.error(`Invalid owner address "${args.OPERATOR}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid owner address "${args.OPERATOR}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
         }
 
         return this.contract.call(
@@ -328,8 +320,7 @@ class ContractBlocks extends BaseBlocks {
         const methodName = 'balanceOf'
 
         if (!args.OWNER || !args.OWNER.match(regEx.ethereumAddress)) {
-            log.error(`Invalid owner address "${args.OWNER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
-            return
+            return this.errorHandler(`Invalid owner address "${args.OWNER}" for the ${methodName} reporter. Must be a 40 char hexadecimal with a 0x prefix`)
         }
 
         return this.contract.call(
@@ -341,6 +332,10 @@ class ContractBlocks extends BaseBlocks {
     ownerOf(args)
     {
         const methodName = 'ownerOf'
+
+        if (!(args.TOKEN_ID >= 0)) {
+            return this.errorHandler(`Invalid token id "${args.TOKEN_ID}" for the ${methodName} command. Must be a positive integer.`)
+        }
 
         return this.contract.call(
             methodName,

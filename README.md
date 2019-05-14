@@ -168,10 +168,8 @@ In order to deploy the contracts with the public test networks using [Truffle](h
 
 To deploy the token contract to the Ropsten public test network.
 ```bash
-npx truffle deploy --reset --network ropsten
+npx truffle migrate --reset --network ropsten
 ```
-
-Note Truffle version `v5.0.13` is used to deploy the contracts. The Truffle versions up to `v5.0.17` don't work for various reasons :-(
 
 The extension for the basic ERC20 contract currently works with the [0x999D5f944DD6f97911b2f854638d1fDEe297bE3F](https://ropsten.etherscan.io/address/0x999D5f944DD6f97911b2f854638d1fDEe297bE3F) contract deployed to the Ropsten testnet.
 

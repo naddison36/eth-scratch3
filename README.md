@@ -102,6 +102,7 @@ cd ..
 git clone https://github.com/LLK/scratch-vm.git
 cd scratch-vm
 npm install
+npm install web3@0.20.3
 npm link
 cd ../scratch-gui
 npm link scratch-vm

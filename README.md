@@ -94,7 +94,7 @@ cd eth-scratch3
 npm install
 
 # install the scratch gui and vm packages
-cd ../..
+cd ..
 git clone https://github.com/LLK/scratch-gui.git
 cd scratch-gui
 npm install

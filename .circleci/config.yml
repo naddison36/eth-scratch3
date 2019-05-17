@@ -9,7 +9,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
-          name: Set the GIT_HASH and HEROKU_APP_NAME env vars for use in later steps
+          name: Set the GIT_HASH env var for use in later steps
           command: |
             echo "Set GIT_HASH to `git log -1 --pretty=%h`"
             echo 'export GIT_HASH=`git log -1 --pretty=%h`' >> $BASH_ENV
@@ -21,11 +21,11 @@ jobs:
           name: Install the custom Ethereum extensions
           command: |
             cp ./scratch/gui/index.jsx ./node_modules/scratch-gui/src/lib/libraries/extensions/index.jsx
-            cp ./scratch/extensions ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom
-            cp ./build/contracts ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom/contracts
+            cp -R ./scratch/extensions ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom
+            cp -R ./build/contracts ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom/contracts
             cp ./scratch/vm/extension-manager.js ./node_modules/scratch-gui/node_modules/scratch-vm/src/extension-support/extension-manager.js
       - run:
-          name: Build the React app
+          name: Build the Scratch React app
           command: |
             cd ./node_modules/scratch-gui
             npm install web3@0.20.3

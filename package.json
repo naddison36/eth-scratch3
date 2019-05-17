@@ -26,8 +26,9 @@
     "events": "^3.0.0",
     "minilog": "^3.1.0",
     "scratch-gui": "git+https://github.com/LLK/scratch-gui.git",  
+    "scratch-vm": "git+https://github.com/LLK/scratch-vm.git", 
     "verror": "^1.10.0"
-  },
+  },  
   "devDependencies": {
     "jest": "^24.7.1",
     "markdown-toc": "^1.2.0",

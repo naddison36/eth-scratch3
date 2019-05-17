@@ -17,8 +17,8 @@ jobs:
           name: Install the dependencies
           command: |
             npm install --production
-            npm install webpack
-            npm install webpack-cli
+            npm install -g webpack
+            npm install -g webpack-cli
       - run:
           name: Install the custom Ethereum extensions
           command: |
@@ -32,5 +32,5 @@ jobs:
           command: |
             cd ./node_modules/scratch-gui
             npm install web3@0.20.3
-            npx webpack --progress --colors --bail
+            webpack --progress --colors --bail
 

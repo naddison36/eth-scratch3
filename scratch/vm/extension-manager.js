@@ -9,16 +9,16 @@ const BlockType = require('./block-type');
 // TODO: change extension spec so that library info, including extension ID, can be collected through static methods
 
 const builtinExtensions = {
-    pen: () => require('../extensions/scratch3_pen'),
-    wedo2: () => require('../extensions/scratch3_wedo2'),
-    music: () => require('../extensions/scratch3_music'),
-    microbit: () => require('../extensions/scratch3_microbit'),
-    text2speech: () => require('../extensions/scratch3_text2speech'),
-    translate: () => require('../extensions/scratch3_translate'),
-    videoSensing: () => require('../extensions/scratch3_video_sensing'),
-    speech2text: () => require('../extensions/scratch3_speech2text'),
-    ev3: () => require('../extensions/scratch3_ev3'),
-    makeymakey: () => require('../extensions/scratch3_makeymakey'),
+    // pen: () => require('../extensions/scratch3_pen'),
+    // wedo2: () => require('../extensions/scratch3_wedo2'),
+    // music: () => require('../extensions/scratch3_music'),
+    // microbit: () => require('../extensions/scratch3_microbit'),
+    // text2speech: () => require('../extensions/scratch3_text2speech'),
+    // translate: () => require('../extensions/scratch3_translate'),
+    // videoSensing: () => require('../extensions/scratch3_video_sensing'),
+    // speech2text: () => require('../extensions/scratch3_speech2text'),
+    // ev3: () => require('../extensions/scratch3_ev3'),
+    // makeymakey: () => require('../extensions/scratch3_makeymakey'),
     // Custom extensions
     ether: () => require('../extensions/custom/ether'),
     tokenDetailedMintableBurnable: () => require('../extensions/custom/tokenDetailedMintableBurnable'),

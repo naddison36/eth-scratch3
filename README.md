@@ -7,12 +7,13 @@
 
 # Playground
 
-For now, a Scratch 3.0 server with some token extensions have been made publicly available at https://eth-scratch3.herokuapp.com/
-This may be moved or even taken down in the future.
+A Scratch 3.0 server with the Ethereum extensions has been made publicly available at https://scratch.addisonbrown.com.au/
 
-To load an extension, click the `Add Extension` button on the bottom left of the Scratch UI.
+To load an Ethereum extension, click the `Add Extension` button on the bottom left of the Scratch UI.
 
 ![Add Extension](./docs/addExtensionButton.png "Add Extension")
+
+Even though the applicatoin is served on a content delivery network (CDN), it can still take some time to download as the JavaScript file `lib.min.js` is 20.7 MB in size.
 
 # Quick Start
 
@@ -44,6 +45,7 @@ After the server starts, Scratch should be available at [http://localhost:8601](
   * [Smart Contracts](#smart-contracts)
   * [MetaMask](#metamask)
 - [Docker](#docker)
+- [Hosting](#hosting)
 - [Continuous Integration](#continuous-integration)
 - [TODO](#TODO)
 
@@ -213,6 +215,20 @@ docker push registry.heroku.com/eth-scratch3/web:latest
 
 This project is deploying to Heroku hence the `registry.heroku.com/eth-scratch3` image names. These will need to be changed if deploying to other cloud-based container registries.
 
+# Hosting
+
+The Scratch playground with Ethereum extensions has been deploed to an [AWS S3](https://aws.amazon.com/s3/) bucket called `scratch.addisonbrown.com.au`. This is made publically available via [Static Website hosting](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html) at endpoint http://scratch.addisonbrown.com.au.s3-website.us-east-2.amazonaws.com
+
+To speed up the delivery of the static files, [AWS CloudFront](https://aws.amazon.com/cloudfront/) is used a content delivery network (CDN). The CloudFront distribution domain name is http://d38knlehb6x8uc.cloudfront.net
+
+[AWS Route 53](https://aws.amazon.com/route53/) has the DNS records to route the `scratch.addisonbrown.com.au` subdomain to the CloudFront distribution. Speficically, it has A and AAAA alias records to route IPv4 and IPv6 addresses.
+
+The partent `addisonbrown.com.au` domain is managed by [netregistry](https://netregistry.com.au). It delegates responsibility for the `scratch.addisonbrown.com.au` subdomain to Route 53 by adding a NS records. A separate NS record is created for each of the four name services in the Route 53 service.
+
+[AWS Certificate Manager](https://aws.amazon.com/certificate-manager/) is used to issue the certificate for the `scratch.addisonbrown.com.au` subdomain. This is required for the secure https connections to the CloudFront distribution.
+
+See [Creating a Subdomain That Uses Amazon Route 53 as the DNS Service without Migrating the Parent Domain](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingNewSubdomain.html) for more information.
+
 # Continuous Integration
 
 [CicleCi](https://circleci.com/) is used for CI. The config file is [.circleci/config.yml](.circleci/config.yml). The CircleCi jobs can be viewed at https://circleci.com/gh/naddison36/eth-scratch3/tree/master.
@@ -226,7 +242,6 @@ Currently, builds are automatically pushed to Heroku https://eth-scratch3.heroku
 * Events for Ether blocks. eg account balance changes
 * Generating an extension from a contract’s ABI
 * Integrating [Assist.js](https://github.com/blocknative/assist) for easier onboarding
-* Deploy the Scratch server to another Cloud platform. eg AWS
 * Extension that uses Web3.js 1.x
 * Extension that uses [Ethers.js](https://docs.ethers.io/ethers.js/html/)
 

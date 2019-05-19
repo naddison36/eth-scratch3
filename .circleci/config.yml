@@ -4,7 +4,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: webpackcontrib/circleci-node10
+      - image: circleci/node:lts-stretch
     steps:
       - checkout
       - setup_remote_docker:
@@ -24,7 +24,6 @@ jobs:
       - run:
           name: Install the custom Ethereum extensions
           command: |
-            pwd
             cp ./scratch/gui/index.jsx ./node_modules/scratch-gui/src/lib/libraries/extensions/index.jsx
             cp -R ./scratch/extensions ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom
             # the following is a symbolic link to ../../build/contracts which will not work for this build
@@ -36,17 +35,13 @@ jobs:
           command: |
             cd ./node_modules/scratch-gui
             npx webpack --progress --colors --bail
-      # - aws-s3/sync:
-      #     from: build
-      #     to: 's3://eth-scratch/'
-      #     aws-access-key-id: AWS_ACCESS_KEY_ID
-      #     aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-      #     # aws-region: AWS_REGION
-      #     arguments: |
-      #       --acl public-read \
-      #       --cache-control "max-age=86400"
-      #     overwrite: true
-      # - aws-s3/copy:
-      #     from: build
-      #     to: 's3://eth-scratch'
-      #     arguments: '--dryrun'
+      - aws-s3/sync:
+          from: ./node_modules/scratch-gui/build
+          to: 's3://eth-scratch/'
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          # aws-region: AWS_REGION
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400"
+          overwrite: true

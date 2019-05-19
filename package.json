@@ -25,8 +25,7 @@
   "dependencies": {
     "events": "^3.0.0",
     "minilog": "^3.1.0",
-    "scratch-gui": "git+https://github.com/LLK/scratch-gui.git",  
-    "scratch-vm": "git+https://github.com/LLK/scratch-vm.git", 
+    "scratch-gui": "git+https://github.com/LLK/scratch-gui.git",
     "verror": "^1.10.0"
   },  
   "devDependencies": {

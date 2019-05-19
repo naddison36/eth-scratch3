@@ -1,5 +1,6 @@
 version: 2.1
-
+orbs:
+  aws-s3: circleci/aws-s3@1.0.9
 jobs:
   build:
     docker:
@@ -17,19 +18,32 @@ jobs:
           name: Install the dependencies
           command: |
             npm install --production
+            cd ./node_modules/scratch-gui
+            npm install
+            npm install web3@0.20.3
       - run:
           name: Install the custom Ethereum extensions
           command: |
             cp ./scratch/gui/index.jsx ./node_modules/scratch-gui/src/lib/libraries/extensions/index.jsx
-            cp -R ./scratch/extensions ./node_modules/scratch-vm/src/extensions/custom
-            rm ./node_modules/scratch-vm/src/extensions/custom/contracts
-            cp -R ./build/contracts ./node_modules/scratch-vm/src/extensions/custom/contracts
-            cp ./scratch/vm/extension-manager.js ./node_modules/scratch-vm/src/extension-support/extension-manager.js
+            cp -R ./scratch/extensions ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom
+            # rm ./node_modules/scratch-vm/src/extensions/custom/contracts
+            cp -R ./build/contracts ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom/contracts
+            cp ./scratch/vm/extension-manager.js ./node_modules/scratch-gui/node_modules/scratch-vm/src/extension-support/extension-manager.js
       - run:
           name: Build the Scratch React app
           command: |
-            cd ./node_modules/scratch-gui
-            npm install
-            npm install web3@0.20.3
             npx webpack --progress --colors --bail
-
+      # - aws-s3/sync:
+      #     from: build
+      #     to: 's3://eth-scratch/'
+      #     aws-access-key-id: AWS_ACCESS_KEY_ID
+      #     aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      #     # aws-region: AWS_REGION
+      #     arguments: |
+      #       --acl public-read \
+      #       --cache-control "max-age=86400"
+      #     overwrite: true
+      # - aws-s3/copy:
+      #     from: build
+      #     to: 's3://eth-scratch'
+      #     arguments: '--dryrun'

@@ -35,6 +35,9 @@ jobs:
           command: |
             cd ./node_modules/scratch-gui
             npx webpack --progress --colors --bail
+      - run:
+          name: Install Python dependency for AWS CLI
+          command: sudo apt-get install python-dev
       - aws-s3/sync:
           from: ./node_modules/scratch-gui/build
           to: 's3://eth-scratch/'

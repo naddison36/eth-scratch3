@@ -24,14 +24,17 @@ jobs:
       - run:
           name: Install the custom Ethereum extensions
           command: |
+            pwd
             cp ./scratch/gui/index.jsx ./node_modules/scratch-gui/src/lib/libraries/extensions/index.jsx
             cp -R ./scratch/extensions ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom
-            # rm ./node_modules/scratch-vm/src/extensions/custom/contracts
+            # the following is a symbolic link to ../../build/contracts which will not work for this build
+            rm ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom/contracts
             cp -R ./build/contracts ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom/contracts
             cp ./scratch/vm/extension-manager.js ./node_modules/scratch-gui/node_modules/scratch-vm/src/extension-support/extension-manager.js
       - run:
           name: Build the Scratch React app
           command: |
+            cd ./node_modules/scratch-gui
             npx webpack --progress --colors --bail
       # - aws-s3/sync:
       #     from: build

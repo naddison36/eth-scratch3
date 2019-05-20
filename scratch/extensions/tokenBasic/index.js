@@ -207,7 +207,7 @@ class ContractBlocks extends BaseBlocks {
 
     approve(args)
     {
-        const methodName = 'transferFrom'
+        const methodName = 'approve'
 
         if (!args.SPENDER || !args.SPENDER.match(regEx.ethereumAddress)) {
             return this.errorHandler(`Invalid spender address "${args.SPENDER}" for the ${methodName} command. Must be a 40 char hexadecimal with a 0x prefix`)

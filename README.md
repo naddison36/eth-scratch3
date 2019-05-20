@@ -13,7 +13,7 @@ To load an Ethereum extension, click the `Add Extension` button on the bottom le
 
 ![Add Extension](./docs/addExtensionButton.png "Add Extension")
 
-Even though the applicatoin is served on a content delivery network (CDN), it can still take some time to download as the JavaScript file `lib.min.js` is 20.7 MB in size.
+Even though the applicatoin is served on a content delivery network (CDN), it can still take some time to download as the JavaScript file `lib.min.js` is nearly 20 MB in size.
 
 # Quick Start
 

@@ -50,4 +50,6 @@ jobs:
           overwrite: true
       - run:
           name: Clear CloudFront
-          command: aws cloudfront create-invalidation --distribution-id AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+          command: |
+            echo "AWS_CLOUDFRONT_DISTRIBUTION_ID set to $AWS_CLOUDFRONT_DISTRIBUTION_ID"
+            aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"

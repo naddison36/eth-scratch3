@@ -11,6 +11,9 @@ class BaseBlocks {
     constructor(runtimeProxy) {
         this.runtime = runtimeProxy
 
+        // Request the user to connect MetaMask to the Scratch application
+        ethereum.enable()
+
         this.eventQueues = {}
     }
 
@@ -21,17 +24,13 @@ class BaseBlocks {
                 blockType: BlockType.COMMAND,
                 text: formatMessage({
                     id: 'tokenBasic.setContract',
-                    default: 'Set contract [ADDRESS] on network with id [NETWORK_ID]',
+                    default: 'Set contract [ADDRESS]',
                     description: 'command text',
                 }),
                 arguments: {
                     ADDRESS: {
                         type: ArgumentType.STRING,
                         defaultValue: 'tokenAddress',
-                    },
-                    NETWORK_ID: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: this.contract.network,
                     },
                 },
             },
@@ -41,6 +40,15 @@ class BaseBlocks {
                 text: formatMessage({
                     id: 'tokenBasic.contractAddress',
                     default: 'Contract Address',
+                    description: 'command text',
+                }),
+            },
+            {
+                opcode: 'getNetworkId',
+                blockType: BlockType.REPORTER,
+                text: formatMessage({
+                    id: 'tokenBasic.networkId',
+                    default: 'Network Identifier',
                     description: 'command text',
                 }),
             },
@@ -219,7 +227,6 @@ class BaseBlocks {
 
         this.contract.setContract({
             contractAddress: args.ADDRESS,
-            network: args.NETWORK_ID,
         })
     }
 
@@ -231,6 +238,16 @@ class BaseBlocks {
         }
 
         return this.contract.contractAddress
+    }
+
+    getNetworkId()
+    {
+        if (!ethereum || !ethereum.networkVersion) {
+            log.error(`Failed to get network identifier. Make sure a browser wallet like MetaMask has been installed.`)
+            return
+        }
+
+        return ethereum.networkVersion
     }
 
     errorHandler(errorMessage) {

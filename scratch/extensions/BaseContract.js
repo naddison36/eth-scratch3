@@ -29,17 +29,17 @@ class BaseContract {
 
     setContract(options)
     {
-        this.network = options.network || 3 // default to the Ropsten network
-        this.contractAddress = options.contractAddress || this.Contract.networks[this.network].address
+        const network = options.network || ethereum.networkVersion || 3 // default to the Ropsten network
+        this.contractAddress = options.contractAddress || this.Contract.networks[network].address
 
         this.contract = this.web3Client.eth.contract(this.Contract.abi).at(this.contractAddress)
 
-        log.debug(`Set contract to address ${this.contractAddress} for network ${this.network}`)
+        log.debug(`Set contract to address ${this.contractAddress} for network ${network}`)
 
         this.startWatchingEvents()
     }
 
-    // of selected address of the browser wallet is not available, then
+    // return selected address of the browser wallet. If not available,
     // request access to the browser wallet from the user
     enableEthereum() {
 
@@ -95,7 +95,7 @@ class BaseContract {
                         else {
                             this.setContract({
                                 contractAddress: contract.address,
-                                network: web3.version.network
+                                network: ethereum.networkVersion
                             })
 
                             resolve(contract.address)

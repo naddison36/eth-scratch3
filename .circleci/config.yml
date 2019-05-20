@@ -40,7 +40,7 @@ jobs:
           command: sudo apt-get install python-dev
       - aws-s3/sync:
           from: ./node_modules/scratch-gui/build
-          to: 's3://eth-scratch/'
+          to: 's3://scratch.addisonbrown.com.au/'
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           aws-region: AWS_REGION

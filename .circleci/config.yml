@@ -25,6 +25,8 @@ jobs:
           name: Install the custom Ethereum extensions
           command: |
             cp ./scratch/gui/index.jsx ./node_modules/scratch-gui/src/lib/libraries/extensions/index.jsx
+            # remove the other extension examples - especially the music extensions with large mp3 files
+            rm -r ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/*
             cp -R ./scratch/extensions ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom
             # the following is a symbolic link to ../../build/contracts which will not work for this build
             rm ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom/contracts

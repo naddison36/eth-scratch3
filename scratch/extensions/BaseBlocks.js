@@ -65,7 +65,7 @@ class BaseBlocks {
                     EVENT_NAME: {
                         type: ArgumentType.STRING,
                         menu: 'events',
-                        defaultValue: 'Transfer'
+                        defaultValue: this.eventNames[0]
                     }
                 }
             },
@@ -102,7 +102,7 @@ class BaseBlocks {
                     EVENT_NAME: {
                         type: ArgumentType.STRING,
                         menu: 'events',
-                        defaultValue: 'Transfer'
+                        defaultValue: this.eventNames[0]
                     }
                 }
             },

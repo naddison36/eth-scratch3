@@ -8,9 +8,22 @@ const log = require('minilog')('eth-scratch3:QueueManager')
 
 class QueueManager {
 
+    // QueueManager is a singleton
     constructor() {
+
+        // return single instance of QueueManager already created
+        if (QueueManager.instance) {
+            return QueueManager.instance
+        }
+
+        // QueueManager instance does not exist so will create one
+        QueueManager.instance = this
+
         // queues object is of type {items: any[], pendingDequeue: boolean}
-        this.queues = {}    
+        this.queues = {}
+
+        // Initialize object
+        return QueueManager.instance
     }
 
     // initialises a queue
@@ -95,7 +108,7 @@ class QueueManager {
             return
         }
 
-        log.debug(`Property "${propertyName}" from first item in the "${queueName}" queue with id "${queue.items[0].id}" has value "${queue.items[0][propertyName]}"`)
+        log.debug(`Property "${propertyName}" from first of "${queue.items.length}" items in the "${queueName}" queue with id "${queue.items[0].id}" has value "${queue.items[0][propertyName]}"`)
 
         return queue.items[0][propertyName]
     }

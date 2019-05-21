@@ -81,7 +81,7 @@ class BaseBlocks {
                     EVENT_NAME: {
                         type: ArgumentType.STRING,
                         menu: 'events',
-                        defaultValue: 'Transfer'
+                        defaultValue: this.eventNames[0]
                     },
                     EVENT_PROPERTY: {
                         type: ArgumentType.STRING,
@@ -159,7 +159,7 @@ class BaseBlocks {
 
     getQueuedEventProperty(args)
     {
-        this.queueManager.readQueuedItemProperty(args.EVENT_NAME, args.EVENT_PROPERTY.toLowerCase())
+        return this.queueManager.readQueuedItemProperty(args.EVENT_NAME, args.EVENT_PROPERTY.toLowerCase())
     }
 
     setContract(args) {

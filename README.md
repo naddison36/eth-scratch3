@@ -236,7 +236,8 @@ See [Creating a Subdomain That Uses Amazon Route 53 as the DNS Service without M
 Currently, builds are automatically pushed to Heroku https://eth-scratch3.herokuapp.com/. This will probably change to AWS in the future.
 
 # TODO
-
+* Read state of sent transactions. eg pending or number of confirmations
+* Need to convert event args that are integers from strings to numbers
 * Hat event block for feeding back errors
 * Extension for full [ERC721](http://erc721.org/) non-fungible tokens
 * Events for Ether blocks. eg account balance changes

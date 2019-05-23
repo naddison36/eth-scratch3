@@ -12,6 +12,7 @@
     "pushWebImage": "docker push registry.heroku.com/eth-scratch3/web:latest",
     "deployLocal": "truffle deploy --reset",
     "deployRopsten": "truffle deploy --reset --network ropsten",
+    "analyze": "npx source-map-explorer 'build/*.js'",
     "test": "./node_modules/.bin/jest --forceExit --detectOpenHandles --runInBand"
   },
   "repository": {
@@ -33,6 +34,7 @@
     "markdown-toc": "^1.2.0",
     "openzeppelin-solidity": "^2.2.0",
     "solc": "^0.5.8",
+    "source-map-explorer": "^1.8.0",
     "truffle": "^5.0.17",
     "truffle-hdwallet-provider": "^1.0.6",
     "web3": "^0.20.3"

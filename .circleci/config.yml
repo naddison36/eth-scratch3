@@ -1,5 +1,6 @@
 version: 2.1
-
+orbs:
+  aws-s3: circleci/aws-s3@1.0.9
 jobs:
   build:
     docker:
@@ -9,50 +10,48 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
-          name: Set the GIT_HASH and HEROKU_APP_NAME env vars for use in later steps
+          name: Set the GIT_HASH env var for use in later steps
           command: |
             echo "Set GIT_HASH to `git log -1 --pretty=%h`"
             echo 'export GIT_HASH=`git log -1 --pretty=%h`' >> $BASH_ENV
-
-            echo "Set HEROKU_APP_NAME to eth-scratch3"
-            echo 'export HEROKU_APP_NAME="eth-scratch3"' >> $BASH_ENV
       - run:
-          name: Login to Heroku Container Registry
-          command: >
-            echo "About to login to the Heroku Container Registry using the ${HEROKU_USERNAME} user";
-            docker login
-            --username=$HEROKU_USERNAME
-            --password=$HEROKU_AUTH_TOKEN
-            registry.heroku.com
-      # - run:
-      #     name: Pull images from Heroku Container Registry so the docker layers can be cached
-      #     command: |
-      #       docker pull registry.heroku.com/${HEROKU_APP_NAME}/base:latest || true
-      #       docker pull registry.heroku.com/${HEROKU_APP_NAME}/web:latest || true
-      # - run:
-      #     name: Build base image
-      #     command: >
-      #       docker build
-      #       --cache-from registry.heroku.com/${HEROKU_APP_NAME}/base:latest
-      #       -t registry.heroku.com/${HEROKU_APP_NAME}/base:latest
-      #       --target base
-      #       .
-      - run:
-          name: Build Scratch server image
-          command: >
-            docker build
-            -t registry.heroku.com/${HEROKU_APP_NAME}/web:latest
-            --target web
-            .
-      - run:
-          name: Push images to Heroku Container Registry
+          name: Install the dependencies
           command: |
-            echo "About to push containers to the Heroku Container Registry for the Heroku app ${HEROKU_APP_NAME}"
-            # docker push registry.heroku.com/${HEROKU_APP_NAME}/base
-            docker push registry.heroku.com/${HEROKU_APP_NAME}/web
-      - deploy:
-          name: Release Scratch server image from the Heroku Container Registry
+            npm install --production
+            cd ./node_modules/scratch-gui
+            npm install
+            npm install web3@0.20.3
+      - run:
+          name: Install the custom Ethereum extensions
           command: |
-            echo "About to release the Scratch server container to Heroku app ${HEROKU_APP_NAME}"
-
-            ./heroku/scripts/release.sh ${HEROKU_APP_NAME} web
+            cp ./scratch/gui/index.jsx ./node_modules/scratch-gui/src/lib/libraries/extensions/index.jsx
+            # remove the other extension examples - especially the music extensions with large mp3 files
+            rm -r ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/*
+            cp -R ./scratch/extensions ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom
+            # the following is a symbolic link to ../../build/contracts which will not work for this build
+            rm ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom/contracts
+            cp -R ./build/contracts ./node_modules/scratch-gui/node_modules/scratch-vm/src/extensions/custom/contracts
+            cp ./scratch/vm/extension-manager.js ./node_modules/scratch-gui/node_modules/scratch-vm/src/extension-support/extension-manager.js
+      - run:
+          name: Build the Scratch React app
+          command: |
+            cd ./node_modules/scratch-gui
+            npx webpack --progress --colors --bail
+      - run:
+          name: Install Python dependency for AWS CLI
+          command: sudo apt-get install python-dev
+      - aws-s3/sync:
+          from: ./node_modules/scratch-gui/build
+          to: 's3://scratch.addisonbrown.com.au/'
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
+          # arguments: |
+          #   --acl public-read \
+          #   --cache-control "max-age=86400"
+          overwrite: true
+      - run:
+          name: Clear CloudFront
+          command: |
+            echo "AWS_CLOUDFRONT_DISTRIBUTION_ID set to $AWS_CLOUDFRONT_DISTRIBUTION_ID"
+            aws cloudfront create-invalidation --distribution-id $AWS_CLOUDFRONT_DISTRIBUTION_ID --paths "/*"

@@ -5,13 +5,17 @@ const ArgumentType = require('../../extension-support/argument-type')
 const BlockType = require('../../extension-support/block-type')
 
 const regEx = require('./regEx')
+const QueueManager = require('./QueueManager')
 
 class BaseBlocks {
 
     constructor(runtimeProxy) {
         this.runtime = runtimeProxy
 
-        this.eventQueues = {}
+        // Request the user to connect MetaMask to the Scratch application
+        ethereum.enable()
+
+        this.queueManager = new QueueManager()
     }
 
     commonBlocks() {
@@ -21,17 +25,13 @@ class BaseBlocks {
                 blockType: BlockType.COMMAND,
                 text: formatMessage({
                     id: 'tokenBasic.setContract',
-                    default: 'Set contract [ADDRESS] on network with id [NETWORK_ID]',
+                    default: 'Set contract [ADDRESS]',
                     description: 'command text',
                 }),
                 arguments: {
                     ADDRESS: {
                         type: ArgumentType.STRING,
                         defaultValue: 'tokenAddress',
-                    },
-                    NETWORK_ID: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: this.contract.network,
                     },
                 },
             },
@@ -41,6 +41,15 @@ class BaseBlocks {
                 text: formatMessage({
                     id: 'tokenBasic.contractAddress',
                     default: 'Contract Address',
+                    description: 'command text',
+                }),
+            },
+            {
+                opcode: 'getNetworkId',
+                blockType: BlockType.REPORTER,
+                text: formatMessage({
+                    id: 'tokenBasic.networkId',
+                    default: 'Network Identifier',
                     description: 'command text',
                 }),
             },
@@ -56,7 +65,7 @@ class BaseBlocks {
                     EVENT_NAME: {
                         type: ArgumentType.STRING,
                         menu: 'events',
-                        defaultValue: 'Transfer'
+                        defaultValue: this.eventNames[0]
                     }
                 }
             },
@@ -72,7 +81,7 @@ class BaseBlocks {
                     EVENT_NAME: {
                         type: ArgumentType.STRING,
                         menu: 'events',
-                        defaultValue: 'Transfer'
+                        defaultValue: this.eventNames[0]
                     },
                     EVENT_PROPERTY: {
                         type: ArgumentType.STRING,
@@ -93,7 +102,7 @@ class BaseBlocks {
                     EVENT_NAME: {
                         type: ArgumentType.STRING,
                         menu: 'events',
-                        defaultValue: 'Transfer'
+                        defaultValue: this.eventNames[0]
                     }
                 }
             },
@@ -102,6 +111,8 @@ class BaseBlocks {
 
     initEvents(eventNames)
     {
+        this.eventNames = eventNames
+
         for (let eventName of eventNames) {
             this.registerEvent(eventName)
         }
@@ -111,22 +122,22 @@ class BaseBlocks {
     {
         log.debug(`Registering event ${eventName}`)
 
-        // Register queue for emitted events
-        this.eventQueues[eventName] = {
-            queue: [],
-            pendingDequeue: false
-        }
+        this.queueManager.initQueue(eventName)
 
         // Add event listener to add events to the queue
         this.contract.eventEmitter.on(eventName, (event) => {
-            this.eventQueues[eventName].queue.push(event)
-            log.info(`Added ${eventName} event to queue with tx hash ${event.transactionHash}. Queue length ${this.eventQueues[eventName].queue.length}`)
+
+            this.queueManager.enqueueItem(eventName, {
+                id: event.transactionHash,
+                // only storing the event args on the queue
+                ...event.args
+            })
         })
     }
 
     eventsMenu() {
-        // for each event queue
-        return Object.keys(this.eventQueues).map(eventName => {
+        // create an array of Block menu items for each event
+        return this.eventNames.map(eventName => {
             return {
                 text: eventName,
                 value: eventName,
@@ -135,80 +146,20 @@ class BaseBlocks {
     }
 
     // is there a new event that can be dequeued?
+    // this is a mutating function
     isQueuedEvent(args) {
-
-        const eventName = args.EVENT_NAME
-
-        if (!this.eventQueues || !this.eventQueues[eventName]) {
-            log.error(`Failed to find "${eventName}" event queue.`)
-            return false
-        }
-
-        const eventQueue = this.eventQueues[eventName]
-
-        if (eventQueue.queue.length > 0 && eventQueue.pendingDequeue === false) {
-            log.info(`When pending ${eventName} event with hash ${eventQueue.queue[0].transactionHash}`)
-            eventQueue.pendingDequeue = true
-            return true
-        }
-        else {
-            return false
-        }
+        return this.queueManager.isQueued(args.EVENT_NAME)
     }
 
     // dequeue a pending event
     dequeueEvent(args)
     {
-        const eventName = args.EVENT_NAME
-
-        const description = `dequeue the "${eventName}" event`
-
-        if (!this.eventQueues || !this.eventQueues[eventName]) {
-            return this.errorHandler(`Failed to ${description} as failed to find the "${eventName}" event queue.`)
-        }
-
-        const eventQueue = this.eventQueues[eventName]
-
-        if (!eventQueue.pendingDequeue) {
-            return this.errorHandler(`Failed to ${description} as no events are on the queue. Queue length ${eventQueue.queue.length}.`)
-        }
-
-        log.info(`About to ${description} with hash ${eventQueue.queue[0].transactionHash}`)
-
-        // remove the oldest event from the queue
-        eventQueue.queue.shift()
-        eventQueue.pendingDequeue = false
-
-        log.debug(`${eventQueue.queue.length} in the "${eventName}" event queue after dequeue`)
+        this.queueManager.dequeueItem(args.EVENT_NAME)
     }
 
     getQueuedEventProperty(args)
     {
-        const eventName = args.EVENT_NAME
-        const propertyName = args.EVENT_PROPERTY.toLowerCase()
-
-        const description = `read property "${propertyName}" from queued "${eventName}" event`
-
-        if (!this.eventQueues || !this.eventQueues[eventName]) {
-            log.error(`Failed to ${description}. The ${eventName} queue does not exist.`)
-            return
-        }
-
-        const eventQueue = this.eventQueues[eventName]
-
-        if (!eventQueue.pendingDequeue) {
-            log.error(`Failed to ${description} as no events are on the queue. Queue length ${eventQueue.queue.length}.`)
-            return
-        }
-
-        if (!eventQueue.queue[0].args.hasOwnProperty(propertyName)) {
-            log.error(`Failed to ${description} as property does not exist on the queued event.`)
-            return
-        }
-
-        log.debug(`Property ${propertyName} from queued ${eventName} event with hash ${eventQueue.queue[0].transactionHash} has value ${eventQueue.queue[0].args[propertyName]}`)
-
-        return eventQueue.queue[0].args[propertyName]
+        return this.queueManager.readQueuedItemProperty(args.EVENT_NAME, args.EVENT_PROPERTY.toLowerCase())
     }
 
     setContract(args) {
@@ -219,7 +170,6 @@ class BaseBlocks {
 
         this.contract.setContract({
             contractAddress: args.ADDRESS,
-            network: args.NETWORK_ID,
         })
     }
 
@@ -231,6 +181,16 @@ class BaseBlocks {
         }
 
         return this.contract.contractAddress
+    }
+
+    getNetworkId()
+    {
+        if (!ethereum || !ethereum.networkVersion) {
+            log.error(`Failed to get network identifier. Make sure a browser wallet like MetaMask has been installed.`)
+            return
+        }
+
+        return ethereum.networkVersion
     }
 
     errorHandler(errorMessage) {

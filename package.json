@@ -35,7 +35,7 @@
     "openzeppelin-solidity": "^2.2.0",
     "solc": "^0.5.8",
     "source-map-explorer": "^1.8.0",
-    "truffle": "^5.0.17",
+    "truffle": "^5.7.9",
     "truffle-hdwallet-provider": "^1.0.6",
     "web3": "^0.20.7"
   }
